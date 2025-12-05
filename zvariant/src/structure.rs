@@ -337,6 +337,19 @@ macro_rules! tuple_impls {
                 }
             }
 
+            impl<'a, E, $($name),+> TryFrom<&Value<'a>> for ($($name),+,)
+            where
+                $($name: TryFrom<Value<'a>, Error = E>,)+
+                crate::Error: From<E>,
+
+            {
+                type Error = crate::Error;
+
+                fn try_from(v: &Value<'a>) -> core::result::Result<Self, Self::Error> {
+                    Self::try_from(Structure::try_from(v)?)
+                }
+            }
+
             impl<'a, E, $($name),+> TryFrom<Value<'a>> for ($($name),+,)
             where
                 $($name: TryFrom<Value<'a>, Error = E>,)+
