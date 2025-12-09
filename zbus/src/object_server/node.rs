@@ -1,7 +1,7 @@
 //! The object server API.
 
 use std::{
-    collections::{hash_map::Entry, HashMap},
+    collections::{btree_map, hash_map, BTreeMap, HashMap},
     fmt::Write,
 };
 
@@ -20,7 +20,7 @@ use super::{ArcInterface, Interface};
 pub(crate) struct Node {
     path: OwnedObjectPath,
     children: HashMap<String, Node>,
-    interfaces: HashMap<InterfaceName<'static>, ArcInterface>,
+    interfaces: BTreeMap<InterfaceName<'static>, ArcInterface>,
 }
 
 impl Node {
@@ -77,7 +77,7 @@ impl Node {
 
             write!(&mut node_path, "/{i}").unwrap();
             match node.children.entry(i.into()) {
-                Entry::Vacant(e) => {
+                hash_map::Entry::Vacant(e) => {
                     if create {
                         let path = node_path.as_str().try_into().expect("Invalid Object Path");
                         node = e.insert(Node::new(path));
@@ -85,7 +85,7 @@ impl Node {
                         return (None, obj_manager_path);
                     }
                 }
-                Entry::Occupied(e) => node = e.into_mut(),
+                hash_map::Entry::Occupied(e) => node = e.into_mut(),
             }
         }
 
@@ -119,11 +119,11 @@ impl Node {
         arc_iface: ArcInterface,
     ) -> bool {
         match self.interfaces.entry(name) {
-            Entry::Vacant(e) => {
+            btree_map::Entry::Vacant(e) => {
                 e.insert(arc_iface);
                 true
             }
-            Entry::Occupied(_) => false,
+            btree_map::Entry::Occupied(_) => false,
         }
     }
 
