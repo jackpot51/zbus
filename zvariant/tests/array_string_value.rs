@@ -3,7 +3,7 @@
 fn array_string_value() {
     use arrayvec::ArrayString;
     use std::str::FromStr;
-    use zvariant::{serialized::Context, to_bytes, LE};
+    use zvariant::{LE, serialized::Context, to_bytes};
 
     #[macro_use]
     mod common {

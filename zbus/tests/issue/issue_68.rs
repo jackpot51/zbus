@@ -2,7 +2,7 @@ use futures_util::StreamExt;
 use ntest::timeout;
 use test_log::test;
 
-use zbus::{message::Message, names::UniqueName, Connection, MessageStream};
+use zbus::{Connection, MessageStream, message::Message, names::UniqueName};
 
 #[test]
 #[timeout(15000)]

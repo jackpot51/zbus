@@ -3,7 +3,7 @@
 fn ostree_de() {
     use serde::{Deserialize, Serialize};
     use std::collections::HashMap;
-    use zvariant::{serialized::Context, Type, Value, LE};
+    use zvariant::{LE, Type, Value, serialized::Context};
 
     #[macro_use]
     mod common {

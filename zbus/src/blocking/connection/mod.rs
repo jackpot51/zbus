@@ -7,11 +7,11 @@ use zbus_names::{BusName, ErrorName, InterfaceName, MemberName, OwnedUniqueName,
 use zvariant::ObjectPath;
 
 use crate::{
+    DBusError, Error, Result,
     blocking::ObjectServer,
     fdo::{ConnectionCredentials, RequestNameFlags, RequestNameReply},
     message::Message,
     utils::block_on,
-    DBusError, Error, Result,
 };
 
 mod builder;
@@ -320,8 +320,8 @@ mod tests {
     use uds_windows::UnixStream;
 
     use crate::{
-        blocking::{connection::Builder, MessageIterator},
         Guid,
+        blocking::{MessageIterator, connection::Builder},
     };
 
     #[test]

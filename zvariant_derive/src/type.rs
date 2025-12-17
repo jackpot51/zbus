@@ -1,9 +1,9 @@
 use std::str::FromStr;
 
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 use syn::{
-    spanned::Spanned, Attribute, Data, DataEnum, DeriveInput, Error, Fields, Generics, Ident,
+    Attribute, Data, DataEnum, DeriveInput, Error, Fields, Generics, Ident, spanned::Spanned,
 };
 use zvariant_utils::signature::Signature;
 

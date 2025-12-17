@@ -1,5 +1,5 @@
 use super::{Transport, Unix, UnixSocket};
-use crate::{process::run, Result};
+use crate::{Result, process::run};
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]

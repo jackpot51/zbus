@@ -2,9 +2,9 @@
 use std::{borrow::Cow, fmt, sync::Arc};
 
 use zbus_names::{ErrorName, InterfaceName, MemberName};
-use zvariant::{serialized, Endian};
+use zvariant::{Endian, serialized};
 
-use crate::{utils::padding_for_8_bytes, zvariant::ObjectPath, Error, Result};
+use crate::{Error, Result, utils::padding_for_8_bytes, zvariant::ObjectPath};
 
 mod builder;
 pub use builder::Builder;
@@ -20,7 +20,7 @@ mod body;
 pub use body::Body;
 
 pub(crate) mod header;
-pub use header::{EndianSig, Flags, Header, PrimaryHeader, Type, NATIVE_ENDIAN_SIG};
+pub use header::{EndianSig, Flags, Header, NATIVE_ENDIAN_SIG, PrimaryHeader, Type};
 use header::{MIN_MESSAGE_SIZE, PRIMARY_HEADER_SIZE};
 
 /// A position in the stream of [`Message`] objects received by a single [`zbus::Connection`].

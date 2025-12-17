@@ -1,4 +1,4 @@
-use zvariant::{ObjectPath, Value, LE};
+use zvariant::{LE, ObjectPath, Value};
 
 #[macro_use]
 mod common {

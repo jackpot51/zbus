@@ -3,7 +3,7 @@
 use ntest::timeout;
 use test_log::test;
 
-use zbus::{block_on, conn::Builder, Result};
+use zbus::{Result, block_on, conn::Builder};
 
 #[test]
 #[timeout(15000)]

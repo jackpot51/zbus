@@ -1,18 +1,18 @@
 //! The object server API.
 
 use std::{collections::HashMap, marker::PhantomData, sync::Arc};
-use tracing::{debug, instrument, trace, trace_span, Instrument};
+use tracing::{Instrument, debug, instrument, trace, trace_span};
 
 use zbus_names::InterfaceName;
 use zvariant::{ObjectPath, Value};
 
 use crate::{
+    Connection, Error, Result,
     async_lock::RwLock,
     connection::WeakConnection,
     fdo,
     fdo::ObjectManager,
     message::{Header, Message},
-    Connection, Error, Result,
 };
 
 mod interface;

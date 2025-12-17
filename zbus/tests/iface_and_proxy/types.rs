@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use zbus::{
-    zvariant::{DeserializeDict, OwnedValue, SerializeDict, Str, Type, Value},
     DBusError,
+    zvariant::{DeserializeDict, OwnedValue, SerializeDict, Str, Type, Value},
 };
 
 // Test crate attribute with re-exported zvariant path

@@ -302,7 +302,7 @@ impl Clone for OwnedValue {
 mod tests {
     use std::{collections::HashMap, error::Error};
 
-    use crate::{serialized::Context, to_bytes, OwnedValue, Value, LE};
+    use crate::{LE, OwnedValue, Value, serialized::Context, to_bytes};
 
     #[cfg(feature = "enumflags2")]
     #[test]

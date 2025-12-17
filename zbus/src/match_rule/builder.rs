@@ -1,9 +1,9 @@
 use crate::{
+    Error, MatchRule, Result,
     match_rule::PathSpec,
     message::Type,
     names::{BusName, InterfaceName, MemberName, UniqueName},
     zvariant::{ObjectPath, Str},
-    Error, MatchRule, Result,
 };
 
 const MAX_ARGS: u8 = 64;

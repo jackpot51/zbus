@@ -1,4 +1,4 @@
-use zvariant::{serialized::Context, to_bytes, Error, MaxDepthExceeded, Value, LE};
+use zvariant::{Error, LE, MaxDepthExceeded, Value, serialized::Context, to_bytes};
 
 #[macro_use]
 mod common {

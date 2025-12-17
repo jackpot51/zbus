@@ -1,4 +1,4 @@
-use async_broadcast::{broadcast, Receiver};
+use async_broadcast::{Receiver, broadcast};
 
 use futures_util::StreamExt;
 use ntest::timeout;

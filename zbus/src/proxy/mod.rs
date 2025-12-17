@@ -1,9 +1,9 @@
 //! The client-side proxy API.
 
-use enumflags2::{bitflags, BitFlags};
+use enumflags2::{BitFlags, bitflags};
 use event_listener::{Event, EventListener};
 use futures_core::{ready, stream};
-use ordered_stream::{join as join_streams, FromFuture, Join, Map, OrderedStream, PollResult};
+use ordered_stream::{FromFuture, Join, Map, OrderedStream, PollResult, join as join_streams};
 use std::{
     collections::{HashMap, HashSet},
     fmt,
@@ -13,15 +13,15 @@ use std::{
     sync::{Arc, OnceLock, RwLock, RwLockReadGuard},
     task::{Context, Poll},
 };
-use tracing::{debug, info_span, instrument, trace, Instrument};
+use tracing::{Instrument, debug, info_span, instrument, trace};
 
 use zbus_names::{BusName, InterfaceName, MemberName, UniqueName};
 use zvariant::{ObjectPath, OwnedValue, Str, Value};
 
 use crate::{
+    AsyncDrop, Connection, Error, Executor, MatchRule, MessageStream, OwnedMatchRule, Result, Task,
     fdo::{self, IntrospectableProxy, NameOwnerChanged, PropertiesChangedStream, PropertiesProxy},
     message::{Flags, Message, Sequence, Type},
-    AsyncDrop, Connection, Error, Executor, MatchRule, MessageStream, OwnedMatchRule, Result, Task,
 };
 
 mod builder;
@@ -1208,7 +1208,9 @@ impl<'a> SignalStream<'a> {
                         }
                         Some(Either::Left(Err(_))) => (),
                         Some(Either::Right(Ok(response))) => {
-                            break Some(response.body().deserialize::<UniqueName<'_>>()?.to_owned())
+                            break Some(
+                                response.body().deserialize::<UniqueName<'_>>()?.to_owned(),
+                            );
                         }
                         Some(Either::Right(Err(e))) => {
                             // Probably the name is not owned. Not a problem but let's still log it.
@@ -1223,7 +1225,7 @@ impl<'a> SignalStream<'a> {
                                     "connection closed",
                                 )
                                 .into(),
-                            ))
+                            ));
                         }
                     }
                 };

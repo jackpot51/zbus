@@ -58,9 +58,9 @@ impl<'a> ObjectPath<'a> {
     /// # Safety
     ///
     /// See [`std::str::from_utf8_unchecked`].
-    pub unsafe fn from_bytes_unchecked<'s: 'a>(bytes: &'s [u8]) -> Self { unsafe {
-        Self(std::str::from_utf8_unchecked(bytes).into())
-    }}
+    pub unsafe fn from_bytes_unchecked<'s: 'a>(bytes: &'s [u8]) -> Self {
+        unsafe { Self(std::str::from_utf8_unchecked(bytes).into()) }
+    }
 
     /// Create a new `ObjectPath` from the given string.
     ///
@@ -246,7 +246,7 @@ impl<'de> Visitor<'de> for ObjectPathVisitor {
 }
 
 fn validate(path: &[u8]) -> Result<()> {
-    use winnow::{combinator::separated, stream::AsChar, token::take_while, Parser};
+    use winnow::{Parser, combinator::separated, stream::AsChar, token::take_while};
     // Rules
     //
     // * At least 1 character.

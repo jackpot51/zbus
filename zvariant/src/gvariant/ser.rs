@@ -1,6 +1,6 @@
 use serde::{
-    ser::{self, SerializeMap, SerializeSeq, SerializeTuple},
     Serialize,
+    ser::{self, SerializeMap, SerializeSeq, SerializeTuple},
 };
 use std::{
     io::{Seek, Write},
@@ -8,12 +8,12 @@ use std::{
 };
 
 use crate::{
+    Error, Result, Signature,
     container_depths::ContainerDepths,
     framing_offset_size::FramingOffsetSize,
     framing_offsets::FramingOffsets,
     serialized::{Context, Format},
     utils::*,
-    Error, Result, Signature,
 };
 
 /// Our serialization implementation.

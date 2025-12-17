@@ -1,8 +1,8 @@
 use std::io;
 
-use async_broadcast::{broadcast, Receiver, Sender};
+use async_broadcast::{Receiver, Sender, broadcast};
 
-use crate::{conn::AuthMechanism, fdo::ConnectionCredentials, Message};
+use crate::{Message, conn::AuthMechanism, fdo::ConnectionCredentials};
 
 /// An in-process channel-based socket.
 ///

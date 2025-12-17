@@ -432,10 +432,10 @@ pub fn validate(bytes: &[u8]) -> Result<(), Error> {
 /// Instead it will return dummy values in the parsed Signature.
 fn parse(bytes: &[u8], check_only: bool) -> Result<Signature, Error> {
     use winnow::{
+        Parser,
         combinator::{alt, delimited, empty, eof, fail, repeat},
         dispatch,
         token::any,
-        Parser,
     };
 
     let unit = eof.map(|_| Signature::Unit);

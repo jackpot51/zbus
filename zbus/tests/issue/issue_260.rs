@@ -1,7 +1,7 @@
 use ntest::timeout;
 use test_log::test;
 
-use zbus::{block_on, Connection, Result};
+use zbus::{Connection, Result, block_on};
 
 #[test]
 #[timeout(15000)]

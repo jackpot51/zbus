@@ -7,9 +7,9 @@
 //! [FAQ entry]: https://z-galaxy.github.io/zbus/faq.html#how-to-use-a-struct-as-a-dictionary
 
 mod deserialize;
-pub use deserialize::{deserialize, Deserialize};
+pub use deserialize::{Deserialize, deserialize};
 mod serialize;
-pub use serialize::{serialize, Serialize};
+pub use serialize::{Serialize, serialize};
 
 /// Utilities to (de)serialize an optional value as a [`enum@zvariant::Value`].
 pub mod optional {

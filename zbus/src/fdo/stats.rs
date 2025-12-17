@@ -6,7 +6,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use zbus_names::{BusName, OwnedUniqueName};
-use zvariant::{as_value::optional, OwnedValue, Type};
+use zvariant::{OwnedValue, Type, as_value::optional};
 
 use super::Result;
 use crate::proxy;

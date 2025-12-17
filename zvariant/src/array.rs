@@ -6,8 +6,8 @@ use serde::{
 use std::fmt::{Display, Write};
 
 use crate::{
-    value::{value_display_fmt, SignatureSeed},
     DynamicDeserialize, DynamicType, Error, Result, Signature, Type, Value,
+    value::{SignatureSeed, value_display_fmt},
 };
 
 /// A helper type to wrap arrays in a [`Value`].
@@ -53,7 +53,7 @@ impl<'a> Array<'a> {
                 return Err(Error::SignatureMismatch(
                     element.value_signature().clone(),
                     child.signature().clone().to_string(),
-                ))
+                ));
             }
             Signature::Array(_) => (),
             _ => unreachable!("Incorrect `Array` signature"),

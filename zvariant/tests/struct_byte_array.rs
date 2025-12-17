@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use zvariant::{serialized::Context, Value};
+use zvariant::{Value, serialized::Context};
 
 #[macro_use]
 mod common {

@@ -128,10 +128,10 @@ impl FromStr for Address {
     fn from_str(address: &str) -> Result<Self> {
         use std::str::from_utf8_unchecked;
         use winnow::{
+            Parser,
             ascii::alphanumeric1,
             combinator::separated,
             token::{take_until, take_while},
-            Parser,
         };
 
         // All currently defined keys are alphanumber only. Change the paser when/if this changes.
@@ -186,8 +186,8 @@ impl From<Transport> for Address {
 #[cfg(test)]
 mod tests {
     use super::{
-        transport::{Tcp, TcpTransportFamily, Transport},
         Address,
+        transport::{Tcp, TcpTransportFamily, Transport},
     };
     #[cfg(target_os = "macos")]
     use crate::address::transport::Launchd;
@@ -365,10 +365,11 @@ mod tests {
             "tcp:host=localhost,port=4142,family=ipv6"
         );
         assert_eq!(
-            Address::from(Transport::Tcp(Tcp::new("localhost", 4142)
-                .set_family(Some(TcpTransportFamily::Ipv6))
-                .set_nonce_file(Some(b"/a/file/path to file 1234".to_vec())
-            )))
+            Address::from(Transport::Tcp(
+                Tcp::new("localhost", 4142)
+                    .set_family(Some(TcpTransportFamily::Ipv6))
+                    .set_nonce_file(Some(b"/a/file/path to file 1234".to_vec()))
+            ))
             .to_string(),
             "nonce-tcp:noncefile=/a/file/path%20to%20file%201234,host=localhost,port=4142,family=ipv6"
         );

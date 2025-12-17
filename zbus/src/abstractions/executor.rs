@@ -4,17 +4,17 @@ use async_executor::Executor as AsyncExecutor;
 use async_task::Task as AsyncTask;
 #[cfg(not(feature = "tokio"))]
 use std::sync::Arc;
-#[cfg(feature = "tokio")]
-use std::{
-    future::pending,
-    io::{Error, ErrorKind},
-    marker::PhantomData,
-};
 use std::{
     future::Future,
     io::Result,
     pin::Pin,
     task::{Context, Poll},
+};
+#[cfg(feature = "tokio")]
+use std::{
+    future::pending,
+    io::{Error, ErrorKind},
+    marker::PhantomData,
 };
 #[cfg(feature = "tokio")]
 use tokio::task::JoinHandle;

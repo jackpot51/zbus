@@ -5,7 +5,7 @@ use std::{
     str::FromStr,
 };
 
-use serde::{de, Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de};
 use zvariant::{Str, Type};
 
 /// A D-Bus server GUID.
@@ -205,7 +205,7 @@ impl From<Guid<'_>> for OwnedGuid {
 
 impl From<OwnedGuid> for Str<'_> {
     fn from(value: OwnedGuid) -> Self {
-        value.0 .0
+        value.0.0
     }
 }
 

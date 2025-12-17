@@ -1,5 +1,5 @@
 //! Connection API.
-use async_broadcast::{broadcast, InactiveReceiver, Receiver, Sender as Broadcaster};
+use async_broadcast::{InactiveReceiver, Receiver, Sender as Broadcaster, broadcast};
 use enumflags2::BitFlags;
 use event_listener::{Event, EventListener};
 use ordered_stream::{OrderedFuture, OrderedStream, PollResult};
@@ -12,7 +12,7 @@ use std::{
     task::{Context, Poll},
     time::Duration,
 };
-use tracing::{debug, info_span, instrument, trace, trace_span, warn, Instrument};
+use tracing::{Instrument, debug, info_span, instrument, trace, trace_span, warn};
 use zbus_names::{BusName, ErrorName, InterfaceName, MemberName, OwnedUniqueName, WellKnownName};
 use zvariant::ObjectPath;
 
@@ -20,13 +20,13 @@ use futures_core::Future;
 use futures_lite::StreamExt;
 
 use crate::{
+    DBusError, Error, Executor, MatchRule, MessageStream, ObjectServer, OwnedGuid, OwnedMatchRule,
+    Result, Task,
     async_lock::{Mutex, Semaphore, SemaphorePermit},
     fdo::{ConnectionCredentials, ReleaseNameReply, RequestNameFlags, RequestNameReply},
     is_flatpak,
     message::{Flags, Message, Type},
     timeout::timeout,
-    DBusError, Error, Executor, MatchRule, MessageStream, ObjectServer, OwnedGuid, OwnedMatchRule,
-    Result, Task,
 };
 
 mod builder;
@@ -1443,7 +1443,7 @@ mod tests {
     #[cfg(target_os = "macos")]
     #[test]
     fn connect_launchd_session_bus() {
-        use crate::address::{transport::Launchd, Address, Transport};
+        use crate::address::{Address, Transport, transport::Launchd};
         crate::block_on(async {
             let addr = Address::from(Transport::Launchd(Launchd::new(
                 "DBUS_LAUNCHD_SESSION_BUS_SOCKET",
@@ -1601,8 +1601,8 @@ mod p2p_tests {
     use test_log::test;
     use zvariant::{Endian, NATIVE_ENDIAN};
 
-    use super::{socket, Builder, Connection};
-    use crate::{conn::AuthMechanism, Guid, Message, MessageStream, Result};
+    use super::{Builder, Connection, socket};
+    use crate::{Guid, Message, MessageStream, Result, conn::AuthMechanism};
 
     // Same numbered client and server are already paired up.
     async fn test_p2p(

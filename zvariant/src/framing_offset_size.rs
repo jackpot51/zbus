@@ -1,4 +1,4 @@
-use crate::{Error, Result, WriteBytes, LE};
+use crate::{Error, LE, Result, WriteBytes};
 
 // Used internally for GVariant encoding and decoding.
 //

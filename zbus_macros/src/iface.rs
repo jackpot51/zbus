@@ -2,16 +2,16 @@ use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use std::collections::BTreeMap;
 use syn::{
-    parse::{Parse, ParseStream},
-    parse_quote, parse_str,
-    punctuated::Punctuated,
-    spanned::Spanned,
-    token::{Async, Comma},
     AngleBracketedGenericArguments, Attribute, Error, Expr, ExprLit, FnArg, GenericArgument, Ident,
     ImplItem, ImplItemFn, ItemImpl,
     Lit::Str,
     Meta, MetaNameValue, PatType, PathArguments, ReturnType, Signature, Token, Type, TypePath,
     Visibility,
+    parse::{Parse, ParseStream},
+    parse_quote, parse_str,
+    punctuated::Punctuated,
+    spanned::Spanned,
+    token::{Async, Comma},
 };
 use zvariant_utils::{case, def_attrs};
 
@@ -328,7 +328,7 @@ pub fn expand(args: Punctuated<Meta, Token![,]>, mut input: ItemImpl) -> syn::Re
                 return Err(syn::Error::new(
                     input.span(),
                     "`name` and `interface` attributes should not be specified at the same time",
-                ))
+                ));
             }
         }
     };

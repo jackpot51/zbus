@@ -1,11 +1,11 @@
 use async_trait::async_trait;
 use tracing::{instrument, trace, warn};
 
-use crate::{conn::socket::ReadHalf, is_flatpak, names::OwnedUniqueName, Message};
+use crate::{Message, conn::socket::ReadHalf, is_flatpak, names::OwnedUniqueName};
 
 use super::{
-    sasl_auth_id, AuthMechanism, Authenticated, BoxedSplit, Command, Common, Error, Handshake,
-    OwnedGuid, Result,
+    AuthMechanism, Authenticated, BoxedSplit, Command, Common, Error, Handshake, OwnedGuid, Result,
+    sasl_auth_id,
 };
 
 /// A representation of an in-progress handshake, client-side
@@ -131,7 +131,7 @@ impl Client {
                     cmd => {
                         return Err(Error::Handshake(format!(
                             "Unexpected command from server: {cmd}"
-                        )))
+                        )));
                     }
                 }
             } else {
@@ -166,7 +166,7 @@ impl Client {
                 cmd => {
                     return Err(Error::Handshake(format!(
                         "Unexpected command from server: {cmd}"
-                    )))
+                    )));
                 }
             }
         }

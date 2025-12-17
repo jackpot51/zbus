@@ -9,13 +9,13 @@ use zvariant::OwnedFd;
 
 use enumflags2::BitFlags;
 use zbus_names::{BusName, ErrorName, InterfaceName, MemberName, UniqueName};
-use zvariant::{serialized, Endian, Signature};
+use zvariant::{Endian, Signature, serialized};
 
 use crate::{
+    Error, Result,
     message::{EndianSig, Fields, Flags, Header, Message, PrimaryHeader, Sequence, Type},
     utils::padding_for_8_bytes,
-    zvariant::{serialized::Context, DynamicType, ObjectPath},
-    Error, Result,
+    zvariant::{DynamicType, ObjectPath, serialized::Context},
 };
 
 use crate::message::header::MAX_MESSAGE_SIZE;

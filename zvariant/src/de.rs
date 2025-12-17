@@ -8,8 +8,8 @@ use std::os::fd::{AsFd, AsRawFd};
 #[cfg(feature = "gvariant")]
 use crate::gvariant::Deserializer as GVDeserializer;
 use crate::{
-    container_depths::ContainerDepths, dbus::Deserializer as DBusDeserializer, serialized::Context,
-    utils::*, Basic, Error, Result, Signature,
+    Basic, Error, Result, Signature, container_depths::ContainerDepths,
+    dbus::Deserializer as DBusDeserializer, serialized::Context, utils::*,
 };
 
 /// Our deserialization implementation.

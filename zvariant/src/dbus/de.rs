@@ -6,10 +6,10 @@ use std::{marker::PhantomData, str};
 use std::os::fd::AsFd;
 
 use crate::{
+    Basic, Error, ObjectPath, Result, Signature,
     de::{DeserializerCommon, ValueParseStage},
     serialized::{Context, Format},
     utils::*,
-    Basic, Error, ObjectPath, Result, Signature,
 };
 
 /// Our D-Bus deserialization implementation.
@@ -104,7 +104,7 @@ impl<'de, #[cfg(unix)] F: AsFd, #[cfg(not(unix))] F> de::Deserializer<'de>
                 return Err(de::Error::invalid_value(
                     de::Unexpected::Unsigned(v as u64),
                     &"0 or 1",
-                ))
+                ));
             }
         };
 

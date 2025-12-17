@@ -6,8 +6,8 @@ use serde::{
 use std::fmt::{Display, Write};
 
 use crate::{
-    value::SignatureSeed, value_display_fmt, DynamicDeserialize, DynamicType, OwnedValue,
-    Signature, Value,
+    DynamicDeserialize, DynamicType, OwnedValue, Signature, Value, value::SignatureSeed,
+    value_display_fmt,
 };
 
 /// Use this to efficiently build a [`Structure`].

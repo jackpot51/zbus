@@ -6,12 +6,12 @@ use std::{
     sync::Arc,
 };
 
-use serde::{de::DeserializeSeed, Deserialize};
+use serde::{Deserialize, de::DeserializeSeed};
 
 use crate::{
+    DynamicDeserialize, DynamicType, Error, Result, Signature, Type,
     de::Deserializer,
     serialized::{Context, Format},
-    DynamicDeserialize, DynamicType, Error, Result, Signature, Type,
 };
 
 /// Represents serialized bytes in a specific format.

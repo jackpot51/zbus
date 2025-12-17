@@ -9,7 +9,7 @@ use std::{
 use clap::Parser;
 use snakecase::ascii::to_snakecase;
 use zbus::{
-    blocking::{connection, fdo::IntrospectableProxy, Connection},
+    blocking::{Connection, connection, fdo::IntrospectableProxy},
     names::BusName,
     zvariant::ObjectPath,
 };
@@ -61,7 +61,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         .partition(|i| i.name().starts_with(fdo_iface_prefix));
 
     if !fdo_standard_ifaces.is_empty() {
-        eprintln!("Skipping `org.freedesktop.DBus` interfaces, please use https://docs.rs/zbus/latest/zbus/fdo/index.html")
+        eprintln!(
+            "Skipping `org.freedesktop.DBus` interfaces, please use https://docs.rs/zbus/latest/zbus/fdo/index.html"
+        )
     }
 
     let mut output_target = match args.output.as_deref() {

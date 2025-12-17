@@ -8,7 +8,7 @@ use zbus_names::InterfaceName;
 use zvariant::{OwnedValue, Value};
 
 use super::{Error, Result};
-use crate::{interface, message::Header, object_server::SignalEmitter, Connection, ObjectServer};
+use crate::{Connection, ObjectServer, interface, message::Header, object_server::SignalEmitter};
 
 /// Service-side implementation for the `org.freedesktop.DBus.Properties` interface.
 /// This interface is implemented automatically for any object registered to the

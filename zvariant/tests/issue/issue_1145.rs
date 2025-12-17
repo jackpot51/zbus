@@ -1,4 +1,4 @@
-use zvariant::{serialized::Context, to_bytes, LE};
+use zvariant::{LE, serialized::Context, to_bytes};
 
 #[test]
 fn issue_1145() {

@@ -1,10 +1,10 @@
 use futures_util::{
-    future::{select, Either},
+    future::{Either, select},
     stream::StreamExt,
 };
 use std::future::ready;
 use zbus::{block_on, fdo, object_server::SignalEmitter, proxy::CacheProperties};
-use zbus_macros::{interface, proxy, DBusError};
+use zbus_macros::{DBusError, interface, proxy};
 
 mod param {
     #[zbus_macros::proxy(

@@ -13,7 +13,7 @@
 
 use proc_macro::TokenStream;
 use syn::{
-    parse_macro_input, punctuated::Punctuated, DeriveInput, ItemImpl, ItemTrait, Meta, Token,
+    DeriveInput, ItemImpl, ItemTrait, Meta, Token, parse_macro_input, punctuated::Punctuated,
 };
 
 mod error;

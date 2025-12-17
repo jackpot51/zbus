@@ -32,7 +32,9 @@ mod doctests {
 #[cfg(all(not(feature = "async-io"), not(feature = "tokio")))]
 mod error_message {
     #[cfg(windows)]
-    compile_error!("Either \"async-io\" (default) or \"tokio\" must be enabled. On Windows \"async-io\" is (currently) required for UNIX socket support");
+    compile_error!(
+        "Either \"async-io\" (default) or \"tokio\" must be enabled. On Windows \"async-io\" is (currently) required for UNIX socket support"
+    );
 
     #[cfg(not(windows))]
     compile_error!("Either \"async-io\" (default) or \"tokio\" must be enabled.");
@@ -59,12 +61,12 @@ pub use message::Message;
 pub mod connection;
 /// Alias for `connection` module, for convenience.
 pub use connection as conn;
+pub use connection::Connection;
 #[deprecated(
     since = "5.0.0",
     note = "Please use `connection::AuthMechanism` instead"
 )]
 pub use connection::handshake::AuthMechanism;
-pub use connection::Connection;
 
 mod message_stream;
 pub use message_stream::*;
@@ -89,7 +91,7 @@ pub mod fdo;
 #[cfg(feature = "blocking-api")]
 pub mod blocking;
 
-pub use zbus_macros::{interface, proxy, DBusError};
+pub use zbus_macros::{DBusError, interface, proxy};
 
 // Required for the macros to function within this crate.
 extern crate self as zbus;

@@ -3,7 +3,7 @@ use std::{collections::HashSet, marker::PhantomData, sync::Arc};
 use zbus_names::{BusName, InterfaceName};
 use zvariant::{ObjectPath, Str};
 
-use crate::{proxy::ProxyInner, Connection, Error, Proxy, Result};
+use crate::{Connection, Error, Proxy, Result, proxy::ProxyInner};
 
 /// The properties caching mode.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]

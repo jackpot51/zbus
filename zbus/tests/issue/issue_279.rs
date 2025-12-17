@@ -10,7 +10,7 @@ async fn issue_279() {
     // which is behind an async mutex and we end up with a deadlock.
     use futures_util::{stream::TryStreamExt, try_join};
     use tokio::net::UnixStream;
-    use zbus::{connection::Builder, MessageStream};
+    use zbus::{MessageStream, connection::Builder};
 
     let guid = zbus::Guid::generate();
     let (p0, p1) = UnixStream::pair().unwrap();

@@ -6,12 +6,12 @@ use std::{marker::PhantomData, str};
 use std::os::fd::AsFd;
 
 use crate::{
+    Basic, Error, ObjectPath, Result, Signature,
     de::{DeserializerCommon, ValueParseStage},
     framing_offset_size::FramingOffsetSize,
     framing_offsets::FramingOffsets,
     serialized::{Context, Format},
     utils::*,
-    Basic, Error, ObjectPath, Result, Signature,
 };
 
 /// Our GVariant deserialization implementation.

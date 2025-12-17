@@ -1,6 +1,6 @@
 use zbus_names::{BusName, InterfaceName, MemberName};
 
-use crate::{zvariant::ObjectPath, Connection, Error, Result};
+use crate::{Connection, Error, Result, zvariant::ObjectPath};
 
 /// A signal emitter.
 ///

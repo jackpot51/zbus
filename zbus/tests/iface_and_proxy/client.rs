@@ -3,10 +3,10 @@ use futures_util::{StreamExt, TryStreamExt};
 use std::convert::TryInto;
 use tracing::{debug, instrument};
 use zbus::{
+    Connection, Error, Message, MessageStream,
     fdo::{ObjectManagerProxy, PropertiesProxy},
     message,
     proxy::CacheProperties,
-    Connection, Error, Message, MessageStream,
 };
 use zvariant::Value;
 
@@ -101,11 +101,13 @@ pub async fn my_iface_test(conn: Connection, event: Event) -> zbus::Result<u32> 
     // First let's call a non-existent method. It should immediately fail.
     // There was a regression where object server would just not reply in this case:
     // https://github.com/z-galaxy/zbus/issues/905
-    assert!(proxy
-        .inner()
-        .call::<_, _, ()>("NonExistantMethod", &())
-        .await
-        .is_err());
+    assert!(
+        proxy
+            .inner()
+            .call::<_, _, ()>("NonExistantMethod", &())
+            .await
+            .is_err()
+    );
 
     let props_proxy = PropertiesProxy::builder(&conn)
         .destination("org.freedesktop.MyService")?

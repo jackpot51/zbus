@@ -1,5 +1,5 @@
 use std::vec;
-use zvariant::{serialized::Context, to_bytes, Array, Type, Value, LE};
+use zvariant::{Array, LE, Type, Value, serialized::Context, to_bytes};
 
 #[macro_use]
 mod common {

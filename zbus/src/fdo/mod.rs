@@ -36,7 +36,7 @@ pub use stats::StatsProxy;
 
 #[cfg(test)]
 mod tests {
-    use crate::{fdo, interface, message::Message, DBusError, Error};
+    use crate::{DBusError, Error, fdo, interface, message::Message};
     use futures_util::StreamExt;
     use ntest::timeout;
     use test_log::test;

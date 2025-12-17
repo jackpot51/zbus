@@ -2,8 +2,8 @@ use std::collections::{BTreeMap, HashMap};
 
 use endi::NATIVE_ENDIAN;
 use zvariant::{
-    as_value::optional, serialized::Context, to_bytes, DeserializeDict, Dict, SerializeDict, Str,
-    Type, Value,
+    DeserializeDict, Dict, SerializeDict, Str, Type, Value, as_value::optional,
+    serialized::Context, to_bytes,
 };
 
 #[macro_use]

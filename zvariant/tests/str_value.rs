@@ -1,4 +1,4 @@
-use zvariant::{serialized::Context, to_bytes, Value, LE};
+use zvariant::{LE, Value, serialized::Context, to_bytes};
 
 #[macro_use]
 mod common {
