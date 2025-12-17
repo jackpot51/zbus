@@ -23,5 +23,5 @@ async fn issue_279() {
 
     drop(server);
 
-    assert!(matches!(next_msg_fut.await, Err(_)));
+    assert!(next_msg_fut.await.is_err());
 }

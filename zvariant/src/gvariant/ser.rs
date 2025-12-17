@@ -337,12 +337,10 @@ where
                 StructSerializer::structure(self).map(StructSeqSerializer::Struct)
             }
             Signature::Dict { .. } => self.serialize_map(Some(len)).map(StructSeqSerializer::Map),
-            _ => {
-                return Err(Error::SignatureMismatch(
-                    self.0.signature.clone(),
-                    "a struct, array, u8 or variant".to_string(),
-                ));
-            }
+            _ => Err(Error::SignatureMismatch(
+                self.0.signature.clone(),
+                "a struct, array, u8 or variant".to_string(),
+            )),
         }
     }
 

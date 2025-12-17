@@ -1013,9 +1013,8 @@ impl<'a> Proxy<'a> {
                 .await?
                 .map(Box::new(move |signal| {
                     let args = signal.args().unwrap();
-                    let new_owner = args.new_owner().as_ref().map(|owner| owner.to_owned());
 
-                    new_owner
+                    args.new_owner().as_ref().map(|owner| owner.to_owned())
                 })),
             name: self.destination().clone(),
         })

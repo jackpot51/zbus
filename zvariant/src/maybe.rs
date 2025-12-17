@@ -56,7 +56,7 @@ impl<'a> Maybe<'a> {
     /// Get the inner value as a concrete type
     pub fn get<T>(&'a self) -> core::result::Result<Option<T>, Error>
     where
-        T: ?Sized + TryFrom<&'a Value<'a>>,
+        T: TryFrom<&'a Value<'a>>,
         <T as TryFrom<&'a Value<'a>>>::Error: Into<crate::Error>,
     {
         self.value
@@ -110,7 +110,7 @@ impl<'a> Maybe<'a> {
                 self.value
                     .as_ref()
                     .as_ref()
-                    .map(|v| v.try_clone().map(Into::into))
+                    .map(|v| v.try_clone())
                     .transpose()?,
             ),
             signature: self.signature.clone(),

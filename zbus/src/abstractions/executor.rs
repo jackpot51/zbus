@@ -11,11 +11,7 @@ use std::{
     task::{Context, Poll},
 };
 #[cfg(feature = "tokio")]
-use std::{
-    future::pending,
-    io::{Error, ErrorKind},
-    marker::PhantomData,
-};
+use std::{future::pending, io::Error, marker::PhantomData};
 #[cfg(feature = "tokio")]
 use tokio::task::JoinHandle;
 
@@ -233,7 +229,7 @@ impl<T> Future for Task<T> {
                 Ok(v) => Ok(v),
                 Err(e) => {
                     if e.is_cancelled() {
-                        Err(Error::new(ErrorKind::Other, "tokio::task cancelled"))
+                        Err(Error::other("tokio::task cancelled"))
                     } else {
                         panic!("tokio::task::JoinHandle error: {e}")
                     }

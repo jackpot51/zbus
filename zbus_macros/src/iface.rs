@@ -1214,7 +1214,7 @@ fn is_special_arg(attrs: &[Attribute]) -> bool {
             return false;
         };
 
-        let res = nested.iter().any(|nested_meta| {
+        nested.iter().any(|nested_meta| {
             matches!(
                 nested_meta,
                 Meta::Path(path)
@@ -1224,9 +1224,7 @@ fn is_special_arg(attrs: &[Attribute]) -> bool {
                     path.is_ident("signal_context") ||
                     path.is_ident("signal_emitter")
             )
-        });
-
-        res
+        })
     })
 }
 
