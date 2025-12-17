@@ -32,7 +32,7 @@ pub fn write_interfaces(
     )?;
 
     for interface in interfaces {
-        let gen = GenTrait {
+        let r#gen = GenTrait {
             interface,
             service: service.as_ref(),
             path: path.as_ref(),

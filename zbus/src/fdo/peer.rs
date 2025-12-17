@@ -55,7 +55,7 @@ fn get_machine_id() -> Result<String> {
 
 #[cfg(target_os = "macos")]
 fn get_machine_id() -> Result<String> {
-    extern "C" {
+    unsafe extern "C" {
         fn gethostuuid(id: *mut u8, wait: *const libc::timespec) -> libc::c_int;
     }
 

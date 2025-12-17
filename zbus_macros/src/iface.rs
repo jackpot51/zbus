@@ -861,7 +861,7 @@ pub fn expand(args: Punctuated<Meta, Token![,]>, mut input: ItemImpl) -> syn::Re
         }
     };
 
-    let proxy = proxy.map(|proxy| proxy.gen()).transpose()?;
+    let proxy = proxy.map(|proxy| proxy.r#gen()).transpose()?;
     let introspect_format_str = format!("{}<interface name=\"{iface_name}\">", "{:indent$}");
 
     Ok(quote! {
@@ -1580,7 +1580,7 @@ impl Proxy {
         Ok(())
     }
 
-    fn gen(&self) -> syn::Result<TokenStream> {
+    fn r#gen(&self) -> syn::Result<TokenStream> {
         let attrs = &self.attrs;
         let (
             assume_defaults,

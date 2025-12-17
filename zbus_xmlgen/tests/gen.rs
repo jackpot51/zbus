@@ -11,7 +11,7 @@ macro_rules! gen_diff {
         #[cfg(windows)]
         let expected = expected.replace("\r\n", "\n");
         let node = Node::from_reader(input.as_bytes())?;
-        let gen = GenTrait {
+        let r#gen = GenTrait {
             interface: &node.interfaces()[0],
             path: None,
             service: None,
@@ -28,12 +28,12 @@ macro_rules! gen_diff {
                 .write(true)
                 .truncate(true)
                 .open(path)?;
-            f.write_all(gen.as_bytes())?;
+            f.write_all(r#gen.as_bytes())?;
             f.flush()?;
             return Ok(());
         }
 
-        assert_eq!(gen, expected);
+        assert_eq!(r#gen, expected);
         Ok(())
     }};
 }

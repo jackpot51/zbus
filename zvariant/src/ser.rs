@@ -120,11 +120,11 @@ pub unsafe fn to_writer<W, T>(writer: &mut W, ctxt: Context, value: &T) -> Resul
 where
     W: Write + Seek,
     T: ?Sized + Serialize + DynamicType,
-{
+{ unsafe {
     let signature = value.signature();
 
     to_writer_for_signature(writer, ctxt, signature, value)
-}
+}}
 
 /// Serialize `T` as a byte vector.
 ///
