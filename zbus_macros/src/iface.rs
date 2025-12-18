@@ -1293,8 +1293,14 @@ fn introspect_add_output_args(
         if let Type::Tuple(t) = ty {
             if let Some(arg_names) = arg_names {
                 if t.elems.len() != arg_names.len() {
-                    // Turn into error
-                    panic!("Number of out arg names different from out args specified")
+                    return Err(Error::new_spanned(
+                        ty,
+                        format!(
+                            "out_args specifies {} names but method returns {} values",
+                            arg_names.len(),
+                            t.elems.len()
+                        ),
+                    ));
                 }
             }
             for i in 0..t.elems.len() {
