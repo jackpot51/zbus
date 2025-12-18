@@ -202,7 +202,10 @@ pub async fn my_iface_test(conn: Connection, event: Event) -> zbus::Result<u32> 
         .unwrap();
     let methods = iface.methods();
     for method in methods {
-        if method.name() != "TestSingleStructRet" && method.name() != "TestMultiRet" {
+        if method.name() != "TestSingleStructRet"
+            && method.name() != "TestMultiRet"
+            && method.name() != "TestSingleRetWithName"
+        {
             continue;
         }
         let args = method.args();
@@ -214,17 +217,25 @@ pub async fn my_iface_test(conn: Connection, event: Event) -> zbus::Result<u32> 
             assert_eq!(args.len(), 1);
             assert_eq!(out_args.next().unwrap().ty(), "(is)");
             assert!(out_args.next().is_none());
-        } else {
+        } else if method.name() == "TestMultiRet" {
             assert_eq!(args.len(), 2);
             let foo = out_args.find(|a| a.name() == Some("foo")).unwrap();
             assert_eq!(foo.ty(), "i");
             let bar = out_args.find(|a| a.name() == Some("bar")).unwrap();
             assert_eq!(bar.ty(), "s");
+        } else if method.name() == "TestSingleRetWithName" {
+            // Test that single output with out_args attribute gets the name
+            assert_eq!(args.len(), 1);
+            let out_arg = out_args.next().unwrap();
+            assert_eq!(out_arg.name(), Some("SomeOutput"));
+            assert_eq!(out_arg.ty(), "s");
+            assert!(out_args.next().is_none());
         }
     }
     // build-time check to see if macro is doing the right thing.
     let _ = proxy.test_single_struct_ret().await?.foo;
     let _ = proxy.test_multi_ret().await?.1;
+    let _ = proxy.test_single_ret_with_name().await?;
 
     let val = proxy.ping().await?;
 

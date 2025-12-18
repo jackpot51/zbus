@@ -114,6 +114,13 @@ impl MyIface {
     }
 
     #[instrument]
+    #[zbus(out_args("SomeOutput"))]
+    fn test_single_ret_with_name(&self) -> zbus::fdo::Result<String> {
+        debug!("`TestSingleRetWithName` called.");
+        Ok(String::from("test output"))
+    }
+
+    #[instrument]
     fn test_response_notify(
         &self,
         #[zbus(connection)] conn: &Connection,
