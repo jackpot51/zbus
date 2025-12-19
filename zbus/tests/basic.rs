@@ -10,9 +10,9 @@ use zbus_names::UniqueName;
 use zvariant::{OwnedValue, Type};
 
 use zbus::{
+    Connection, Result,
     fdo::{RequestNameFlags, RequestNameReply},
     message::Message,
-    Connection, Result,
 };
 
 #[test]

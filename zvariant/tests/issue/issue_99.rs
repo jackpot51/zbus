@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use zvariant::{serialized::Context, to_bytes_for_signature, Type, Value, LE};
+use zvariant::{LE, Type, Value, serialized::Context, to_bytes_for_signature};
 
 #[test]
 fn issue_99() {

@@ -24,11 +24,11 @@ use vsock::VsockStream;
 use zvariant::ObjectPath;
 
 use crate::{
+    Connection, Error, Executor, Guid, OwnedGuid, Result,
     address::{self, Address},
     fdo::RequestNameFlags,
     names::{InterfaceName, WellKnownName},
     object_server::{ArcInterface, Interface},
-    Connection, Error, Executor, Guid, OwnedGuid, Result,
 };
 
 use super::{

@@ -21,8 +21,8 @@ use uds_windows::UnixStream;
 
 #[cfg(unix)]
 use rustix::net::{
-    recvmsg, sendmsg, RecvAncillaryBuffer, RecvAncillaryMessage, RecvFlags, SendAncillaryBuffer,
-    SendAncillaryMessage, SendFlags,
+    RecvAncillaryBuffer, RecvAncillaryMessage, RecvFlags, SendAncillaryBuffer,
+    SendAncillaryMessage, SendFlags, recvmsg, sendmsg,
 };
 
 #[cfg(unix)]
@@ -67,19 +67,22 @@ impl super::WriteHalf for Arc<Async<UnixStream>> {
         buffer: &[u8],
         #[cfg(unix)] fds: &[BorrowedFd<'_>],
     ) -> io::Result<usize> {
-        poll_fn(|cx| loop {
-            match fd_sendmsg(
-                self.as_fd(),
-                buffer,
-                #[cfg(unix)]
-                fds,
-            ) {
-                Err(e) if e.kind() == io::ErrorKind::Interrupted => {}
-                Err(e) if e.kind() == io::ErrorKind::WouldBlock => match self.poll_writable(cx) {
-                    Poll::Pending => return Poll::Pending,
-                    Poll::Ready(res) => res?,
-                },
-                v => return Poll::Ready(v),
+        poll_fn(|cx| {
+            loop {
+                match fd_sendmsg(
+                    self.as_fd(),
+                    buffer,
+                    #[cfg(unix)]
+                    fds,
+                ) {
+                    Err(e) if e.kind() == io::ErrorKind::Interrupted => {}
+                    Err(e) if e.kind() == io::ErrorKind::WouldBlock => match self.poll_writable(cx)
+                    {
+                        Poll::Pending => return Poll::Pending,
+                        Poll::Ready(res) => res?,
+                    },
+                    v => return Poll::Ready(v),
+                }
             }
         })
         .await
@@ -166,23 +169,25 @@ impl super::WriteHalf for tokio::net::unix::OwnedWriteHalf {
         #[cfg(unix)] fds: &[BorrowedFd<'_>],
     ) -> io::Result<usize> {
         let stream = self.as_ref();
-        poll_fn(|cx| loop {
-            match stream.try_io(tokio::io::Interest::WRITABLE, || {
-                fd_sendmsg(
-                    stream.as_fd(),
-                    buffer,
-                    #[cfg(unix)]
-                    fds,
-                )
-            }) {
-                Err(e) if e.kind() == io::ErrorKind::Interrupted => {}
-                Err(e) if e.kind() == io::ErrorKind::WouldBlock => {
-                    match stream.poll_write_ready(cx) {
-                        Poll::Pending => return Poll::Pending,
-                        Poll::Ready(res) => res?,
+        poll_fn(|cx| {
+            loop {
+                match stream.try_io(tokio::io::Interest::WRITABLE, || {
+                    fd_sendmsg(
+                        stream.as_fd(),
+                        buffer,
+                        #[cfg(unix)]
+                        fds,
+                    )
+                }) {
+                    Err(e) if e.kind() == io::ErrorKind::Interrupted => {}
+                    Err(e) if e.kind() == io::ErrorKind::WouldBlock => {
+                        match stream.poll_write_ready(cx) {
+                            Poll::Pending => return Poll::Pending,
+                            Poll::Ready(res) => res?,
+                        }
                     }
+                    v => return Poll::Ready(v),
                 }
-                v => return Poll::Ready(v),
             }
         })
         .await
@@ -227,7 +232,7 @@ impl super::ReadHalf for Arc<Async<UnixStream>> {
         let stream = self.clone();
         crate::Task::spawn_blocking(
             move || {
-                use crate::win32::{unix_stream_get_peer_pid, ProcessToken};
+                use crate::win32::{ProcessToken, unix_stream_get_peer_pid};
 
                 let pid = unix_stream_get_peer_pid(stream.get_ref())? as _;
                 let sid = ProcessToken::open(if pid != 0 { Some(pid as _) } else { None })
@@ -414,7 +419,7 @@ fn get_unix_peer_creds_blocking(fd: RawFd) -> io::Result<crate::fdo::ConnectionC
             // FIXME: Replace with rustix API when it provides SO_PEERPIDFD sockopt:
             // https://github.com/bytecodealliance/rustix/pull/1474
             use libc::{c_int, socklen_t};
-            use std::mem::{size_of, MaybeUninit};
+            use std::mem::{MaybeUninit, size_of};
 
             let mut pidfd = MaybeUninit::<c_int>::zeroed();
             let mut len = size_of::<c_int>() as socklen_t;

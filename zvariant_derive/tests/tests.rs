@@ -3,9 +3,9 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use zvariant::{
+    LE, OwnedValue, Type, Value,
     as_value::{self, optional},
     serialized::{Context, Format},
-    OwnedValue, Type, Value, LE,
 };
 
 #[test]

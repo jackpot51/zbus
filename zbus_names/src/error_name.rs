@@ -1,8 +1,8 @@
 use crate::{
-    utils::{impl_str_basic, impl_try_from},
     Error, Result,
+    utils::{impl_str_basic, impl_try_from},
 };
-use serde::{de, Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de};
 use std::{
     borrow::{Borrow, Cow},
     fmt::{self, Debug, Display, Formatter},

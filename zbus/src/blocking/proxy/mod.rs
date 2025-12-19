@@ -7,11 +7,11 @@ use zbus_names::{BusName, InterfaceName, MemberName, UniqueName};
 use zvariant::{ObjectPath, OwnedValue, Value};
 
 use crate::{
+    Error, Result,
     blocking::Connection,
     message::Message,
     proxy::{Defaults, MethodFlags},
     utils::block_on,
-    Error, Result,
 };
 
 use crate::fdo;

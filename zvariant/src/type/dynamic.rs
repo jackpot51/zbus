@@ -57,7 +57,7 @@ where
                     return Err(zvariant::Error::SignatureMismatch(
                         signature.clone(),
                         format!("`{expected}`"),
-                    ))
+                    ));
                 }
             }
         }

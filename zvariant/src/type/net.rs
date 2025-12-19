@@ -6,7 +6,7 @@ impl_type_with_repr! {
     url::Url => &str {
         url_ {
             samples = [url::Url::parse("https://example.com").unwrap()],
-            repr(url) = &url.to_string(),
+            repr(url) = url.as_ref(),
         }
     }
 }

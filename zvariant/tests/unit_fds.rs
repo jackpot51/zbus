@@ -1,7 +1,7 @@
 #[test]
 #[cfg(unix)]
 fn unit_fds() {
-    use zvariant::{serialized::Context, to_bytes, BE};
+    use zvariant::{BE, serialized::Context, to_bytes};
 
     #[macro_use]
     mod common {

@@ -263,7 +263,8 @@ impl MyIface {
         #[zbus(object_server)] object_server: &ObjectServer,
         #[zbus(signal_emitter)] emitter: SignalEmitter<'_>,
     ) {
-        debug!("`TestHeaderProp` setter called, value: {}, header: {:?}, connection: {:?}, object_server: {:?}, emitter: {:?}",
+        debug!(
+            "`TestHeaderProp` setter called, value: {}, header: {:?}, connection: {:?}, object_server: {:?}, emitter: {:?}",
             value, header, connection, object_server, emitter
         );
         assert!(header.is_some());
@@ -354,10 +355,12 @@ impl MyIface {
     fn test_no_reply(&self, #[zbus(header)] header: Header<'_>) {
         debug!("`TestNoReply` called");
         assert_eq!(header.message_type(), zbus::message::Type::MethodCall);
-        assert!(header
-            .primary()
-            .flags()
-            .contains(zbus::message::Flags::NoReplyExpected));
+        assert!(
+            header
+                .primary()
+                .flags()
+                .contains(zbus::message::Flags::NoReplyExpected)
+        );
     }
 
     #[instrument]
@@ -365,10 +368,12 @@ impl MyIface {
     fn test_no_autostart(&self, #[zbus(header)] header: Header<'_>) {
         debug!("`TestNoAutostart` called");
         assert_eq!(header.message_type(), zbus::message::Type::MethodCall);
-        assert!(header
-            .primary()
-            .flags()
-            .contains(zbus::message::Flags::NoAutoStart));
+        assert!(
+            header
+                .primary()
+                .flags()
+                .contains(zbus::message::Flags::NoAutoStart)
+        );
     }
 
     #[instrument]
@@ -376,10 +381,12 @@ impl MyIface {
     fn test_interactive_auth(&self, #[zbus(header)] header: Header<'_>) {
         debug!("`TestInteractiveAuth` called");
         assert_eq!(header.message_type(), zbus::message::Type::MethodCall);
-        assert!(header
-            .primary()
-            .flags()
-            .contains(zbus::message::Flags::AllowInteractiveAuth));
+        assert!(
+            header
+                .primary()
+                .flags()
+                .contains(zbus::message::Flags::AllowInteractiveAuth)
+        );
     }
 
     #[zbus(signal)]

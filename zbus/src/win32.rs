@@ -11,21 +11,21 @@ use std::{
 
 use windows_sys::Win32::{
     Foundation::{
-        LocalFree, ERROR_INSUFFICIENT_BUFFER, FALSE, HANDLE, NO_ERROR, WAIT_ABANDONED,
+        ERROR_INSUFFICIENT_BUFFER, FALSE, HANDLE, LocalFree, NO_ERROR, WAIT_ABANDONED,
         WAIT_OBJECT_0,
     },
-    NetworkManagement::IpHelper::{GetTcpTable2, MIB_TCPTABLE2, MIB_TCP_STATE_ESTAB},
+    NetworkManagement::IpHelper::{GetTcpTable2, MIB_TCP_STATE_ESTAB, MIB_TCPTABLE2},
     Networking::WinSock::INADDR_LOOPBACK,
     Security::{
-        Authorization::ConvertSidToStringSidA, GetTokenInformation, IsValidSid, TokenUser,
-        TOKEN_QUERY, TOKEN_USER,
+        Authorization::ConvertSidToStringSidA, GetTokenInformation, IsValidSid, TOKEN_QUERY,
+        TOKEN_USER, TokenUser,
     },
     System::{
-        Memory::{MapViewOfFile, OpenFileMappingW, FILE_MAP_READ},
+        Memory::{FILE_MAP_READ, MapViewOfFile, OpenFileMappingW},
         Threading::{
-            CreateMutexW, GetCurrentProcess, OpenProcess, OpenProcessToken, ReleaseMutex,
-            WaitForSingleObject, INFINITE, PROCESS_ACCESS_RIGHTS,
-            PROCESS_QUERY_LIMITED_INFORMATION,
+            CreateMutexW, GetCurrentProcess, INFINITE, OpenProcess, OpenProcessToken,
+            PROCESS_ACCESS_RIGHTS, PROCESS_QUERY_LIMITED_INFORMATION, ReleaseMutex,
+            WaitForSingleObject,
         },
         WindowsProgramming::{GetCurrentHwProfileA, HW_PROFILE_INFOA},
     },
@@ -64,7 +64,7 @@ struct MutexGuard<'a>(&'a Mutex);
 
 impl Drop for MutexGuard<'_> {
     fn drop(&mut self) {
-        unsafe { ReleaseMutex(self.0 .0.as_raw_handle()) };
+        unsafe { ReleaseMutex(self.0.0.as_raw_handle()) };
     }
 }
 
@@ -243,7 +243,7 @@ fn last_err() -> std::io::Error {
 #[cfg(not(feature = "tokio"))]
 pub fn unix_stream_get_peer_pid(stream: &UnixStream) -> Result<u32, Error> {
     use std::os::windows::io::AsRawSocket;
-    use windows_sys::Win32::Networking::WinSock::{WSAIoctl, IOC_OUT, IOC_VENDOR, SOCKET_ERROR};
+    use windows_sys::Win32::Networking::WinSock::{IOC_OUT, IOC_VENDOR, SOCKET_ERROR, WSAIoctl};
 
     macro_rules! _WSAIOR {
         ($x:expr, $y:expr) => {

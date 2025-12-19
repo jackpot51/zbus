@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use zvariant::{serialized::Context, to_bytes, OwnedValue, Value, BE, LE};
+use zvariant::{BE, LE, OwnedValue, Value, serialized::Context, to_bytes};
 
 #[macro_use]
 mod common {

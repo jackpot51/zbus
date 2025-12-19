@@ -1,6 +1,7 @@
 use zvariant::{
+    Basic, LE, NATIVE_ENDIAN, Value,
     serialized::{Context, Format},
-    to_bytes, Basic, Value, LE, NATIVE_ENDIAN,
+    to_bytes,
 };
 
 #[test]

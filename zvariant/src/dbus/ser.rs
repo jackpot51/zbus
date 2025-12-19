@@ -1,6 +1,6 @@
 use serde::{
-    ser::{self, SerializeMap, SerializeSeq, SerializeTuple},
     Serialize,
+    ser::{self, SerializeMap, SerializeSeq, SerializeTuple},
 };
 use std::{
     io::{Seek, Write},
@@ -8,10 +8,10 @@ use std::{
 };
 
 use crate::{
+    Basic, Error, ObjectPath, Result, Signature, WriteBytes,
     container_depths::ContainerDepths,
     serialized::{Context, Format},
     utils::*,
-    Basic, Error, ObjectPath, Result, Signature, WriteBytes,
 };
 
 /// Our D-Bus serialization implementation.

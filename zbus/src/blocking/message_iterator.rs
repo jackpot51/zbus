@@ -1,7 +1,7 @@
 use futures_lite::StreamExt;
 
 use crate::{
-    blocking::Connection, message::Message, utils::block_on, MatchRule, OwnedMatchRule, Result,
+    MatchRule, OwnedMatchRule, Result, blocking::Connection, message::Message, utils::block_on,
 };
 
 /// A blocking wrapper of [`crate::MessageStream`].

@@ -1,8 +1,8 @@
 use crate::{
-    utils::{impl_str_basic, impl_try_from},
     Error, Result,
+    utils::{impl_str_basic, impl_try_from},
 };
-use serde::{de, Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de};
 use std::{
     borrow::{Borrow, Cow},
     fmt::{self, Debug, Display, Formatter},
@@ -151,10 +151,10 @@ fn validate(name: &str) -> Result<()> {
 
 pub(crate) fn validate_bytes(bytes: &[u8]) -> std::result::Result<(), ()> {
     use winnow::{
+        Parser,
         combinator::separated,
         stream::AsChar,
         token::{one_of, take_while},
-        Parser,
     };
     // Rules
     //

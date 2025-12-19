@@ -1,4 +1,4 @@
-use crate::{impl_type_with_repr, Signature, Type};
+use crate::{Signature, Type, impl_type_with_repr};
 use std::{
     cell::{Cell, RefCell},
     cmp::Reverse,
@@ -7,11 +7,11 @@ use std::{
     ops::{Range, RangeFrom, RangeInclusive, RangeTo},
     rc::{Rc, Weak as RcWeak},
     sync::{
-        atomic::{
-            AtomicBool, AtomicI16, AtomicI32, AtomicI8, AtomicIsize, AtomicU16, AtomicU32,
-            AtomicU8, AtomicUsize,
-        },
         Arc, Mutex, RwLock, Weak as ArcWeak,
+        atomic::{
+            AtomicBool, AtomicI8, AtomicI16, AtomicI32, AtomicIsize, AtomicU8, AtomicU16,
+            AtomicU32, AtomicUsize,
+        },
     },
     time::Duration,
 };

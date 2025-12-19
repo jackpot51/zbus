@@ -3,9 +3,9 @@
 use zvariant::ObjectPath;
 
 use crate::{
+    Error, Result,
     object_server::{Interface, InterfaceDeref, InterfaceDerefMut, SignalEmitter},
     utils::block_on,
-    Error, Result,
 };
 
 /// Wrapper over an interface, along with its corresponding `SignalEmitter`

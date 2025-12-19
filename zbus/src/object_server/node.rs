@@ -1,7 +1,7 @@
 //! The object server API.
 
 use std::{
-    collections::{btree_map, hash_map, BTreeMap, HashMap},
+    collections::{BTreeMap, HashMap, btree_map, hash_map},
     fmt::Write,
 };
 
@@ -9,9 +9,9 @@ use zbus_names::InterfaceName;
 use zvariant::{ObjectPath, OwnedObjectPath, OwnedValue};
 
 use crate::{
+    Connection, ObjectServer,
     fdo::{self, Introspectable, ManagedObjects, ObjectManager, Peer, Properties},
     object_server::SignalEmitter,
-    Connection, ObjectServer,
 };
 
 use super::{ArcInterface, Interface};

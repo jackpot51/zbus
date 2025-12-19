@@ -18,11 +18,11 @@ use serde::{
 };
 
 use crate::{
-    array_display_fmt, dict_display_fmt, structure_display_fmt, utils::*, Array, Basic, Dict,
-    DynamicType, ObjectPath, OwnedValue, Signature, Str, Structure, StructureBuilder, Type,
+    Array, Basic, Dict, DynamicType, ObjectPath, OwnedValue, Signature, Str, Structure,
+    StructureBuilder, Type, array_display_fmt, dict_display_fmt, structure_display_fmt, utils::*,
 };
 #[cfg(feature = "gvariant")]
-use crate::{maybe_display_fmt, Maybe};
+use crate::{Maybe, maybe_display_fmt};
 
 #[cfg(unix)]
 use crate::Fd;
@@ -691,7 +691,7 @@ impl SignatureSeed<'_> {
                 return Err(Error::invalid_type(
                     Unexpected::Str(&self.signature.to_string()),
                     &"an array signature",
-                ))
+                ));
             }
         };
         let mut array = Array::new_full_signature(self.signature);
@@ -717,7 +717,7 @@ impl SignatureSeed<'_> {
                 return Err(Error::invalid_type(
                     Unexpected::Str(&self.signature.to_string()),
                     &"a structure signature",
-                ))
+                ));
             }
         };
 
@@ -900,7 +900,7 @@ where
                 return Err(Error::invalid_type(
                     Unexpected::Str(&self.signature.to_string()),
                     &"a dict signature",
-                ))
+                ));
             }
         };
 
@@ -933,7 +933,7 @@ where
                 return Err(Error::invalid_type(
                     Unexpected::Str(&self.signature.to_string()),
                     &"a maybe signature",
-                ))
+                ));
             }
         };
         let visitor = ValueSeed::<T> {
@@ -1126,12 +1126,16 @@ mod tests {
 
         let items_str = val.split(", ").collect::<Vec<_>>();
         assert_eq!(items_str.len(), 2);
-        assert!(items_str
-            .iter()
-            .any(|str| str.contains("32") && str.contains(": ") && str.contains("64")));
-        assert!(items_str
-            .iter()
-            .any(|str| str.contains("100") && str.contains(": ") && str.contains("200")));
+        assert!(
+            items_str
+                .iter()
+                .any(|str| str.contains("32") && str.contains(": ") && str.contains("64"))
+        );
+        assert!(
+            items_str
+                .iter()
+                .any(|str| str.contains("100") && str.contains(": ") && str.contains("200"))
+        );
 
         assert_eq!(
             Value::new(((true,), (true, false), (true, true, false))).to_string(),

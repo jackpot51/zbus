@@ -3,7 +3,7 @@
 fn serde_bytes_gvariant() {
     use serde::{Deserialize, Serialize};
     use serde_bytes::*;
-    use zvariant::{serialized::Context, to_bytes, Type, LE};
+    use zvariant::{LE, Type, serialized::Context, to_bytes};
 
     #[macro_use]
     mod common {

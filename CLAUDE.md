@@ -109,7 +109,7 @@ zbus/src/
 
 ## Development Guidelines
 
-- **MSRV**: 1.77.0
+- **MSRV**: 1.85.0
 - **Commit style**: Emoji prefix + package abbreviation (e.g., "🐛 zb: Fix connection timeout")
 - **Testing**: Integration tests require D-Bus session bus
 - **Cross-platform**: Validate changes work on Linux, Windows, macOS

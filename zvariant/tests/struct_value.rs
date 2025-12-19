@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use zvariant::{as_value, serialized::Context, to_bytes, Str, Structure, Type, Value, LE};
+use zvariant::{LE, Str, Structure, Type, Value, as_value, serialized::Context, to_bytes};
 
 #[macro_use]
 mod common {

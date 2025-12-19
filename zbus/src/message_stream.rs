@@ -10,9 +10,9 @@ use ordered_stream::{OrderedStream, PollResult};
 use tracing::warn;
 
 use crate::{
+    AsyncDrop, Connection, MatchRule, OwnedMatchRule, Result,
     connection::ConnectionInner,
     message::{Message, Sequence},
-    AsyncDrop, Connection, MatchRule, OwnedMatchRule, Result,
 };
 
 /// A [`stream::Stream`] implementation that yields [`Message`] items.

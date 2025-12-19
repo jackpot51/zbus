@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, hint::black_box, vec};
 use zbus::Message;
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 
 use zvariant::{Type, Value};
 

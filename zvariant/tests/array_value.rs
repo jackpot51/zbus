@@ -1,5 +1,5 @@
 use std::vec;
-use zvariant::{serialized::Context, to_bytes, Array, Type, Value, LE};
+use zvariant::{Array, LE, Type, Value, serialized::Context, to_bytes};
 
 #[macro_use]
 mod common {
@@ -213,6 +213,7 @@ fn array_value() {
         let ctxt = Context::new_gvariant(LE, 0);
         let gv_encoded = to_bytes(ctxt, &ar).unwrap();
         assert_eq!(gv_encoded.len(), 54);
+        #[allow(clippy::type_complexity)]
         let decoded: Vec<(u8, u32, (i64, bool, i64, Vec<&str>), &str)> =
             gv_encoded.deserialize().unwrap().0;
         assert_eq!(decoded.len(), 1);

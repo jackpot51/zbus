@@ -3,7 +3,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
 use crate::Type;
 
@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn bool_in_optional() {
         // Ensure trying to encode/decode `bool` in `Optional` fails.
-        use crate::{to_bytes, Optional, LE};
+        use crate::{LE, Optional, to_bytes};
 
         let ctxt = crate::serialized::Context::new_dbus(LE, 0);
         let res = catch_unwind(|| to_bytes(ctxt, &Optional::<bool>::default()));

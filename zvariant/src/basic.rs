@@ -1,4 +1,4 @@
-use crate::{serialized::Format, Signature, Type};
+use crate::{Signature, Type, serialized::Format};
 
 /// Trait for basic types.
 ///

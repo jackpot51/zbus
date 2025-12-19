@@ -1,6 +1,6 @@
 use syn::{
-    punctuated::Punctuated, spanned::Spanned, Attribute, Expr, Lit, LitBool, LitStr, Meta,
-    MetaList, Result, Token, Type, TypePath,
+    Attribute, Expr, Lit, LitBool, LitStr, Meta, MetaList, Result, Token, Type, TypePath,
+    punctuated::Punctuated, spanned::Spanned,
 };
 
 // find the #[@attr_name] attribute in @attrs

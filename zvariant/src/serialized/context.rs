@@ -1,4 +1,4 @@
-use crate::{serialized::Format, Endian};
+use crate::{Endian, serialized::Format};
 
 /// The encoding context to use with the [serialization] and [deserialization] API.
 ///

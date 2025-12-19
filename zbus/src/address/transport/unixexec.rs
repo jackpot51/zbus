@@ -99,7 +99,7 @@ impl Display for Unixexec {
 
 #[cfg(test)]
 mod tests {
-    use crate::address::{transport::Transport, Address};
+    use crate::address::{Address, transport::Transport};
 
     #[test]
     fn connect() {

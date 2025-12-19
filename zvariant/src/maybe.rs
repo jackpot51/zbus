@@ -1,7 +1,7 @@
 use serde::ser::{Serialize, Serializer};
 use std::fmt::Display;
 
-use crate::{value_display_fmt, Error, Signature, Type, Value};
+use crate::{Error, Signature, Type, Value, value_display_fmt};
 
 /// A helper type to wrap `Option<T>` (GVariant's Maybe type) in [`Value`].
 ///
@@ -56,7 +56,7 @@ impl<'a> Maybe<'a> {
     /// Get the inner value as a concrete type
     pub fn get<T>(&'a self) -> core::result::Result<Option<T>, Error>
     where
-        T: ?Sized + TryFrom<&'a Value<'a>>,
+        T: TryFrom<&'a Value<'a>>,
         <T as TryFrom<&'a Value<'a>>>::Error: Into<crate::Error>,
     {
         self.value
@@ -110,7 +110,7 @@ impl<'a> Maybe<'a> {
                 self.value
                     .as_ref()
                     .as_ref()
-                    .map(|v| v.try_clone().map(Into::into))
+                    .map(|v| v.try_clone())
                     .transpose()?,
             ),
             signature: self.signature.clone(),

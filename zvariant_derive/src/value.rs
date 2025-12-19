@@ -1,8 +1,8 @@
 use proc_macro2::{Span, TokenStream};
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 use syn::{
-    spanned::Spanned, Attribute, Data, DataEnum, DeriveInput, Error, Fields, Generics, Ident,
-    Lifetime, LifetimeParam, Variant,
+    Attribute, Data, DataEnum, DeriveInput, Error, Fields, Generics, Ident, Lifetime,
+    LifetimeParam, Variant, spanned::Spanned,
 };
 use zvariant_utils::macros;
 

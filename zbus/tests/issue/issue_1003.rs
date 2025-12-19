@@ -6,7 +6,7 @@ use ntest::timeout;
 use test_log::test;
 use tracing::{debug, instrument};
 
-use zbus::{block_on, connection::Builder, AuthMechanism, Guid};
+use zbus::{AuthMechanism, Guid, block_on, connection::Builder};
 
 const UID: u32 = 0;
 

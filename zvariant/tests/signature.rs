@@ -1,4 +1,4 @@
-use zvariant::{signature, Signature, Value, LE};
+use zvariant::{LE, Signature, Value, signature};
 
 #[macro_use]
 mod common {

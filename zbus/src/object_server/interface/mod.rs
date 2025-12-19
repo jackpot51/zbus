@@ -17,11 +17,11 @@ use zbus_names::{InterfaceName, MemberName};
 use zvariant::{OwnedValue, Value};
 
 use crate::{
+    Connection, ObjectServer,
     async_lock::RwLock,
     fdo,
     message::{self, Header, Message},
     object_server::SignalEmitter,
-    Connection, ObjectServer,
 };
 
 /// This trait is used to dispatch messages to an interface instance.

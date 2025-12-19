@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use proc_macro2::{Literal, TokenStream};
 use quote::quote;
-use syn::{parse::Parse, Error};
+use syn::{Error, parse::Parse};
 use zvariant_utils::signature::Signature;
 
 /// Expand the `signature!` macro implementation.

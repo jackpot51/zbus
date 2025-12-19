@@ -90,7 +90,7 @@ fn issue_813() {
             let msg_data = msg.data();
             let mut fds = vec![];
             for _ in 0..2 {
-                bytes.extend_from_slice(&*msg_data);
+                bytes.extend_from_slice(msg_data);
                 fds.push(fd.as_fd());
             }
 

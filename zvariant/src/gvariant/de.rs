@@ -6,12 +6,12 @@ use std::{marker::PhantomData, str};
 use std::os::fd::AsFd;
 
 use crate::{
+    Basic, Error, ObjectPath, Result, Signature,
     de::{DeserializerCommon, ValueParseStage},
     framing_offset_size::FramingOffsetSize,
     framing_offsets::FramingOffsets,
     serialized::{Context, Format},
     utils::*,
-    Basic, Error, ObjectPath, Result, Signature,
 };
 
 /// Our GVariant deserialization implementation.
@@ -95,7 +95,7 @@ impl<'de, 'd, 'sig, 'f, #[cfg(unix)] F: AsFd, #[cfg(not(unix))] F> de::Deseriali
     where
         V: Visitor<'de>,
     {
-        crate::de::deserialize_any::<Self, V>(self, &self.0.signature, visitor)
+        crate::de::deserialize_any::<Self, V>(self, self.0.signature, visitor)
     }
 
     deserialize_basic!(deserialize_bool);
@@ -144,10 +144,10 @@ impl<'de, 'd, 'sig, 'f, #[cfg(unix)] F: AsFd, #[cfg(not(unix))] F> de::Deseriali
             Signature::Str | Signature::Signature | Signature::ObjectPath => {
                 self.0.pos += slice.len();
                 // Get rid of the trailing nul byte (if any)
-                let slice = if slice.len() > 0 && slice[slice.len() - 1] == 0 {
+                let slice = if !slice.is_empty() && slice[slice.len() - 1] == 0 {
                     &slice[..slice.len() - 1]
                 } else {
-                    &slice[..]
+                    slice
                 };
                 if slice.contains(&0) {
                     return Err(serde::de::Error::invalid_value(
@@ -504,7 +504,7 @@ impl<'d, 'de, 'sig, 'f, #[cfg(unix)] F: AsFd, #[cfg(not(unix))] F> SeqAccess<'de
 
         let mut de = Deserializer::<F>(DeserializerCommon {
             ctxt,
-            signature: &self.child_signature,
+            signature: self.child_signature,
             bytes: subslice(self.de.0.bytes, self.de.0.pos..end)?,
             fds: self.de.0.fds,
             pos: 0,
@@ -572,7 +572,7 @@ impl<'d, 'de, 'sig, 'f, #[cfg(unix)] F: AsFd, #[cfg(not(unix))] F> MapAccess<'de
 
         let mut de = Deserializer::<F>(DeserializerCommon {
             ctxt,
-            signature: &self.child_signature,
+            signature: self.child_signature,
             bytes: subslice(self.de.0.bytes, self.de.0.pos..key_end)?,
             fds: self.de.0.fds,
             pos: 0,

@@ -1,6 +1,6 @@
 use proc_macro2::{Span, TokenStream};
 use quote::{format_ident, quote};
-use syn::{punctuated::Punctuated, spanned::Spanned, Data, DeriveInput, Error, Field};
+use syn::{Data, DeriveInput, Error, Field, punctuated::Punctuated, spanned::Spanned};
 use zvariant_utils::macros;
 
 use crate::utils::*;

@@ -1,6 +1,6 @@
 use zvariant::{
-    serialized::{self, Data},
     Signature, Type,
+    serialized::{self, Data},
 };
 
 use crate::{Error, Message, Result};

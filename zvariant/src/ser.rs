@@ -7,11 +7,11 @@ use std::os::fd::OwnedFd;
 #[cfg(feature = "gvariant")]
 use crate::gvariant::Serializer as GVSerializer;
 use crate::{
+    Basic, DynamicType, Error, Result, Signature,
     container_depths::ContainerDepths,
     dbus::Serializer as DBusSerializer,
     serialized::{Context, Data, Format, Size, Written},
     utils::*,
-    Basic, DynamicType, Error, Result, Signature,
 };
 
 struct NullWriteSeek;
@@ -121,9 +121,11 @@ where
     W: Write + Seek,
     T: ?Sized + Serialize + DynamicType,
 {
-    let signature = value.signature();
+    unsafe {
+        let signature = value.signature();
 
-    to_writer_for_signature(writer, ctxt, signature, value)
+        to_writer_for_signature(writer, ctxt, signature, value)
+    }
 }
 
 /// Serialize `T` as a byte vector.

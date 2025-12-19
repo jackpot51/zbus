@@ -2,8 +2,8 @@ use std::collections::{BTreeMap, HashMap};
 
 use endi::NATIVE_ENDIAN;
 use zvariant::{
-    as_value::optional, serialized::Context, to_bytes, DeserializeDict, Dict, SerializeDict, Str,
-    Type, Value,
+    DeserializeDict, Dict, SerializeDict, Str, Type, Value, as_value::optional,
+    serialized::Context, to_bytes,
 };
 
 #[macro_use]
@@ -59,7 +59,7 @@ fn dict_value() {
     assert_eq!(map[&2], "456");
     // Use iterator
     let mut dict = Dict::from(map);
-    let expect = vec![
+    let expect = [
         (Value::from(1i64), Value::from("123")),
         (Value::from(2i64), Value::from("456")),
     ];

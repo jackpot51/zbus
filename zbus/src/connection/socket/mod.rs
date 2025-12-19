@@ -22,19 +22,20 @@ use std::{io, mem};
 use tracing::trace;
 
 use crate::{
+    Message,
     conn::AuthMechanism,
     fdo::ConnectionCredentials,
     message::{
-        header::{MAX_MESSAGE_SIZE, MIN_MESSAGE_SIZE},
         PrimaryHeader,
+        header::{MAX_MESSAGE_SIZE, MIN_MESSAGE_SIZE},
     },
-    padding_for_8_bytes, Message,
+    padding_for_8_bytes,
 };
 #[cfg(unix)]
 use std::os::fd::{AsFd, BorrowedFd, OwnedFd};
 use zvariant::{
-    serialized::{self, Context},
     Endian,
+    serialized::{self, Context},
 };
 
 #[cfg(unix)]

@@ -6,7 +6,7 @@ use std::{
 
 use serde::ser::{Serialize, SerializeMap, Serializer};
 
-use crate::{value_display_fmt, Basic, DynamicType, Error, Signature, Type, Value};
+use crate::{Basic, DynamicType, Error, Signature, Type, Value, value_display_fmt};
 
 /// A helper type to wrap dictionaries in a [`Value`].
 ///
@@ -52,7 +52,7 @@ impl<'k, 'v> Dict<'k, 'v> {
                 return Err(Error::SignatureMismatch(
                     key.value_signature().clone(),
                     key_sig.signature().clone().to_string(),
-                ))
+                ));
             }
             Signature::Dict {
                 value: value_sig, ..
@@ -60,7 +60,7 @@ impl<'k, 'v> Dict<'k, 'v> {
                 return Err(Error::SignatureMismatch(
                     value.value_signature().clone(),
                     value_sig.signature().clone().to_string(),
-                ))
+                ));
             }
             Signature::Dict { .. } => (),
             _ => unreachable!("Incorrect `Dict` signature"),

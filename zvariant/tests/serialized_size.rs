@@ -1,4 +1,4 @@
-use zvariant::{serialized::Context, serialized_size, LE};
+use zvariant::{LE, serialized::Context, serialized_size};
 
 #[cfg(unix)]
 use zvariant::Fd;

@@ -1,5 +1,5 @@
 #[cfg(not(feature = "tokio"))]
-use async_process::{unix::CommandExt, Child};
+use async_process::{Child, unix::CommandExt};
 #[cfg(target_os = "macos")]
 use std::process::Output;
 use std::{ffi::OsStr, io::Error, process::Stdio};

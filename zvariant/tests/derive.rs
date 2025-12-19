@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
-use zvariant::{serialized::Context, to_bytes, Error, OwnedValue, Type, Value, LE};
+use zvariant::{Error, LE, OwnedValue, Type, Value, serialized::Context, to_bytes};
 
 #[macro_use]
 mod common {

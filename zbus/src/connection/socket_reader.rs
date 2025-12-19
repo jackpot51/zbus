@@ -4,7 +4,7 @@ use event_listener::Event;
 use tracing::{debug, instrument, trace};
 
 use crate::{
-    async_lock::Mutex, connection::MsgBroadcaster, Executor, Message, OwnedMatchRule, Task,
+    Executor, Message, OwnedMatchRule, Task, async_lock::Mutex, connection::MsgBroadcaster,
 };
 
 use super::socket::ReadHalf;
@@ -81,8 +81,7 @@ impl SocketReader {
                     if rule.is_some() {
                         trace!(
                             "Error broadcasting message to stream for `{:?}`: {:?}",
-                            rule,
-                            e
+                            rule, e
                         );
                     }
                 }

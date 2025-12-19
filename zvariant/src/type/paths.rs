@@ -1,4 +1,4 @@
-use crate::{static_str_type, Signature, Type};
+use crate::{Signature, Type, static_str_type};
 
 static_str_type!(std::path::Path);
 static_str_type!(std::path::PathBuf);

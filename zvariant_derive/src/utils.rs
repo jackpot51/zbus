@@ -1,5 +1,5 @@
+use proc_macro_crate::{FoundCrate, crate_name};
 use proc_macro2::TokenStream;
-use proc_macro_crate::{crate_name, FoundCrate};
 use quote::{format_ident, quote};
 use zvariant_utils::{case, def_attrs};
 

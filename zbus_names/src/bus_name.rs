@@ -6,10 +6,10 @@ use core::{
 use std::{borrow::Cow, sync::Arc};
 
 use crate::{
-    unique_name, utils::impl_str_basic, well_known_name, Error, OwnedUniqueName,
-    OwnedWellKnownName, Result, UniqueName, WellKnownName,
+    Error, OwnedUniqueName, OwnedWellKnownName, Result, UniqueName, WellKnownName, unique_name,
+    utils::impl_str_basic, well_known_name,
 };
-use serde::{de, Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de};
 use zvariant::{NoneValue, OwnedValue, Str, Type, Value};
 
 /// String that identifies a [bus name].

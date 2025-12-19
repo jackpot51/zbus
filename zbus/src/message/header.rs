@@ -3,17 +3,17 @@ use std::{
     sync::atomic::{AtomicU32, Ordering::Relaxed},
 };
 
-use enumflags2::{bitflags, BitFlags};
+use enumflags2::{BitFlags, bitflags};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
 use zbus_names::{BusName, ErrorName, InterfaceName, MemberName, UniqueName};
 use zvariant::{
-    serialized::{self, Context},
     Endian, ObjectPath, Signature, Type as VariantType,
+    serialized::{self, Context},
 };
 
-use crate::{message::Fields, Error};
+use crate::{Error, message::Fields};
 
 pub(crate) const PRIMARY_HEADER_SIZE: usize = 12;
 pub(crate) const MIN_MESSAGE_SIZE: usize = PRIMARY_HEADER_SIZE + 4;
@@ -321,7 +321,7 @@ mod tests {
     use std::{borrow::Cow, error::Error};
     use test_log::test;
     use zbus_names::{InterfaceName, MemberName};
-    use zvariant::{signature, ObjectPath, Signature};
+    use zvariant::{ObjectPath, Signature, signature};
 
     #[test]
     fn header() -> Result<(), Box<dyn Error>> {

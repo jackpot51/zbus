@@ -1,7 +1,7 @@
 use crate::{DynamicDeserialize, DynamicType, Signature};
 use serde::{
-    de::{Deserialize, DeserializeSeed, Deserializer, Error, Visitor},
     Serialize, Serializer,
+    de::{Deserialize, DeserializeSeed, Deserializer, Error, Visitor},
 };
 use std::marker::PhantomData;
 

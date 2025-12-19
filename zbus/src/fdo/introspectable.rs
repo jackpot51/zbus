@@ -4,7 +4,7 @@
 //! be useful across various D-Bus applications. This module provides their proxy.
 
 use super::{Error, Result};
-use crate::{interface, message::Header, ObjectServer};
+use crate::{ObjectServer, interface, message::Header};
 
 /// Service-side implementation for the `org.freedesktop.DBus.Introspectable` interface.
 /// This interface is implemented automatically for any object registered to the

@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 use serde_bytes::ByteBuf;
 use std::{collections::HashMap, hint::black_box, vec};
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 
-use zvariant::{serialized::Context, to_bytes, Type, Value, LE};
+use zvariant::{LE, Type, Value, serialized::Context, to_bytes};
 
 macro_rules! benchmark {
     ($c:ident, $data:ident, $data_type:ty, $func_prefix:literal) => {

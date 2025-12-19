@@ -83,7 +83,7 @@ async fn issue_310() {
         let path = change.get().await.unwrap();
         let received: u64 = path
             .split('/')
-            .last()
+            .next_back()
             .unwrap()
             .parse()
             .expect("invalid path");

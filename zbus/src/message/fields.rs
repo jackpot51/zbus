@@ -1,7 +1,7 @@
 use serde::{
+    Deserialize, Deserializer, Serialize, Serializer,
     de::{Error, SeqAccess, Visitor},
     ser::{SerializeSeq, SerializeStruct},
-    Deserialize, Deserializer, Serialize, Serializer,
 };
 use std::{borrow::Cow, num::NonZeroU32};
 use zbus_names::{BusName, ErrorName, InterfaceName, MemberName, UniqueName};

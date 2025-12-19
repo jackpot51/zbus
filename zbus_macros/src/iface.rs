@@ -2,16 +2,16 @@ use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use std::collections::BTreeMap;
 use syn::{
-    parse::{Parse, ParseStream},
-    parse_quote, parse_str,
-    punctuated::Punctuated,
-    spanned::Spanned,
-    token::{Async, Comma},
     AngleBracketedGenericArguments, Attribute, Error, Expr, ExprLit, FnArg, GenericArgument, Ident,
     ImplItem, ImplItemFn, ItemImpl,
     Lit::Str,
     Meta, MetaNameValue, PatType, PathArguments, ReturnType, Signature, Token, Type, TypePath,
     Visibility,
+    parse::{Parse, ParseStream},
+    parse_quote, parse_str,
+    punctuated::Punctuated,
+    spanned::Spanned,
+    token::{Async, Comma},
 };
 use zvariant_utils::{case, def_attrs};
 
@@ -328,7 +328,7 @@ pub fn expand(args: Punctuated<Meta, Token![,]>, mut input: ItemImpl) -> syn::Re
                 return Err(syn::Error::new(
                     input.span(),
                     "`name` and `interface` attributes should not be specified at the same time",
-                ))
+                ));
             }
         }
     };
@@ -861,7 +861,7 @@ pub fn expand(args: Punctuated<Meta, Token![,]>, mut input: ItemImpl) -> syn::Re
         }
     };
 
-    let proxy = proxy.map(|proxy| proxy.gen()).transpose()?;
+    let proxy = proxy.map(|proxy| proxy.r#gen()).transpose()?;
     let introspect_format_str = format!("{}<interface name=\"{iface_name}\">", "{:indent$}");
 
     Ok(quote! {
@@ -1214,7 +1214,7 @@ fn is_special_arg(attrs: &[Attribute]) -> bool {
             return false;
         };
 
-        let res = nested.iter().any(|nested_meta| {
+        nested.iter().any(|nested_meta| {
             matches!(
                 nested_meta,
                 Meta::Path(path)
@@ -1224,9 +1224,7 @@ fn is_special_arg(attrs: &[Attribute]) -> bool {
                     path.is_ident("signal_context") ||
                     path.is_ident("signal_emitter")
             )
-        });
-
-        res
+        })
     })
 }
 
@@ -1580,7 +1578,7 @@ impl Proxy {
         Ok(())
     }
 
-    fn gen(&self) -> syn::Result<TokenStream> {
+    fn r#gen(&self) -> syn::Result<TokenStream> {
         let attrs = &self.attrs;
         let (
             assume_defaults,

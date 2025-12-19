@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
+use proc_macro_crate::{FoundCrate, crate_name};
 use proc_macro2::{Span, TokenStream};
-use proc_macro_crate::{crate_name, FoundCrate};
 use quote::{format_ident, quote};
 use syn::{Attribute, FnArg, Ident, Pat, PatIdent, PatType};
 

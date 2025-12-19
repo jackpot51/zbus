@@ -1,9 +1,9 @@
-use crate::utils::{parse_crate_path, pat_ident, typed_arg, zbus_path, PropertyEmitsChangedSignal};
+use crate::utils::{PropertyEmitsChangedSignal, parse_crate_path, pat_ident, typed_arg, zbus_path};
 use proc_macro2::{Literal, Span, TokenStream};
-use quote::{format_ident, quote, quote_spanned, ToTokens};
+use quote::{ToTokens, format_ident, quote, quote_spanned};
 use syn::{
-    fold::Fold, parse_quote, parse_str, punctuated::Punctuated, spanned::Spanned, Error, FnArg,
-    Ident, ItemTrait, Meta, Path, ReturnType, Token, TraitItemFn, Visibility,
+    Error, FnArg, Ident, ItemTrait, Meta, Path, ReturnType, Token, TraitItemFn, Visibility,
+    fold::Fold, parse_quote, parse_str, punctuated::Punctuated, spanned::Spanned,
 };
 use zvariant_utils::{case, def_attrs};
 

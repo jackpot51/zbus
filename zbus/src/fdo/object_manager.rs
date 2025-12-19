@@ -8,7 +8,7 @@ use zbus_names::{InterfaceName, OwnedInterfaceName};
 use zvariant::{ObjectPath, OwnedObjectPath, OwnedValue, Value};
 
 use super::{Error, Result};
-use crate::{interface, message::Header, object_server::SignalEmitter, Connection, ObjectServer};
+use crate::{Connection, ObjectServer, interface, message::Header, object_server::SignalEmitter};
 
 /// The type returned by the [`ObjectManagerProxy::get_managed_objects`] method.
 pub type ManagedObjects =
