@@ -1293,8 +1293,14 @@ fn introspect_add_output_args(
         if let Type::Tuple(t) = ty {
             if let Some(arg_names) = arg_names {
                 if t.elems.len() != arg_names.len() {
-                    // Turn into error
-                    panic!("Number of out arg names different from out args specified")
+                    return Err(Error::new_spanned(
+                        ty,
+                        format!(
+                            "out_args specifies {} names but method returns {} values",
+                            arg_names.len(),
+                            t.elems.len()
+                        ),
+                    ));
                 }
             }
             for i in 0..t.elems.len() {
@@ -1302,7 +1308,24 @@ fn introspect_add_output_args(
                 args.extend(introspect_output_arg(&t.elems[i], name, cfg_attrs));
             }
         } else {
-            args.extend(introspect_output_arg(ty, None, cfg_attrs));
+            // Handle single output case - check if out_args was specified
+            let name = match arg_names {
+                Some(names) => match names.len() {
+                    1 => Some(&names[0]),
+                    0 => None,
+                    _ => {
+                        return Err(Error::new_spanned(
+                            ty,
+                            format!(
+                                "out_args specifies {} names but method has a single output",
+                                names.len()
+                            ),
+                        ));
+                    }
+                },
+                None => None,
+            };
+            args.extend(introspect_output_arg(ty, name, cfg_attrs));
         }
     }
 
