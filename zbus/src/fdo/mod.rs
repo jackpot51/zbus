@@ -43,6 +43,8 @@ mod tests {
     use tokio::runtime;
     use zbus_names::WellKnownName;
 
+    use super::PeerProxy;
+
     #[test]
     fn error_from_zerror() {
         let m = Message::method_call("/", "foo")
@@ -197,5 +199,106 @@ mod tests {
             .into_iter()
             .collect()
         );
+    }
+
+    #[test]
+    #[timeout(15000)]
+    fn peer_on_arbitrary_path() {
+        crate::block_on(peer_on_arbitrary_path_async());
+    }
+
+    /// Test that org.freedesktop.DBus.Peer works on arbitrary paths.
+    ///
+    /// According to the D-Bus specification:
+    /// "On receipt of the METHOD_CALL message org.freedesktop.DBus.Peer.Ping, an application
+    /// should do nothing other than reply with a METHOD_RETURN as usual. It does not matter
+    /// which object path a ping is sent to."
+    ///
+    /// This test verifies that Ping and GetMachineId work on paths that haven't been
+    /// registered via ObjectServer::at.
+    async fn peer_on_arbitrary_path_async() {
+        // Create a service with only a registered path at /registered
+        struct TestObj;
+        #[interface(name = "org.zbus.TestObj")]
+        impl TestObj {}
+
+        let _service_conn = zbus::conn::Builder::session()
+            .unwrap()
+            .name("org.zbus.PeerArbitraryPathTest")
+            .unwrap()
+            .serve_at("/registered", TestObj)
+            .unwrap()
+            .build()
+            .await
+            .unwrap();
+
+        // Create a client connection
+        let client_conn = zbus::Connection::session().await.unwrap();
+
+        // Ping on an unregistered path should succeed
+        let proxy = PeerProxy::new(
+            &client_conn,
+            "org.zbus.PeerArbitraryPathTest",
+            "/this/path/does/not/exist",
+        )
+        .await
+        .expect("Failed to create PeerProxy");
+        let result = proxy.ping().await;
+        assert!(result.is_ok(), "Ping on unregistered path should succeed");
+
+        // GetMachineId on an unregistered path should succeed
+        let proxy = PeerProxy::new(
+            &client_conn,
+            "org.zbus.PeerArbitraryPathTest",
+            "/another/unregistered/path",
+        )
+        .await
+        .expect("Failed to create PeerProxy");
+        let result = proxy.get_machine_id().await;
+        // GetMachineId may fail on some platforms (like *BSD), but should not fail
+        // with "Unknown object" error
+        match &result {
+            Ok(id) => {
+                assert!(!id.is_empty(), "Machine ID should not be empty");
+            }
+            #[cfg(not(any(
+                target_os = "linux",
+                target_os = "macos",
+                target_os = "freebsd",
+                target_os = "dragonfly",
+                target_os = "openbsd",
+                target_os = "netbsd",
+                windows,
+            )))]
+            Err(fdo::Error::NotSupported(_)) => {
+                // NotSupported is acceptable on platforms where it's not implemented
+            }
+            Err(e) => {
+                panic!("GetMachineId failed unexpectedly: {:?}", e);
+            }
+        }
+
+        // Ping on registered path should still work
+        let proxy = PeerProxy::new(
+            &client_conn,
+            "org.zbus.PeerArbitraryPathTest",
+            "/registered",
+        )
+        .await
+        .expect("Failed to create PeerProxy");
+        let result = proxy.ping().await;
+        assert!(result.is_ok(), "Ping on registered path should succeed");
+
+        // Unknown method on Peer interface should fail properly
+        let result = client_conn
+            .call_method(
+                Some("org.zbus.PeerArbitraryPathTest"),
+                "/unregistered",
+                Some("org.freedesktop.DBus.Peer"),
+                "UnknownMethod",
+                &(),
+            )
+            .await;
+        assert!(result.is_err(), "Unknown method should fail");
     }
 }
