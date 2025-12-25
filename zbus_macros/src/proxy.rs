@@ -36,6 +36,7 @@ def_attrs! {
         object str,
         async_object str,
         blocking_object str,
+        object_vec none,
         no_reply none,
         no_autostart none,
         allow_interactive_auth none
@@ -525,6 +526,7 @@ fn gen_proxy_method_call(
                 .unwrap_or_else(|| format!("{o}Proxy"))
         }
     });
+    let proxy_vec = method_attrs.object_vec;
 
     let method_flags = match (
         method_attrs.no_reply,
@@ -602,24 +604,51 @@ fn gen_proxy_method_call(
 
     if let Some(proxy_path) = proxy_object {
         let proxy_path = parse_str::<Path>(&proxy_path)?;
+        let ok_type = if proxy_vec {
+            quote!(Vec<#proxy_path<'p>>)
+        } else {
+            quote!(#proxy_path<'p>)
+        };
         let signature = quote! {
-            fn #method #ty_generics(#inputs) -> #zbus::Result<#proxy_path<'p>>
+            fn #method #ty_generics(#inputs) -> #zbus::Result<#ok_type>
             #where_clause
         };
 
+        let proxy_build = quote! {
+            #proxy_path::builder(&self.0.connection())
+                .path(object_path)?
+                .build()
+                #wait
+        };
+        let method_call = quote! {
+            self.0.call(
+                #dbus_member_name,
+                &#zbus::zvariant::DynamicTuple((#(#args,)*)),
+            )
+            #wait?
+        };
+        let body = if proxy_vec {
+            quote! {
+                let object_paths: Vec<#zbus::zvariant::OwnedObjectPath> = #method_call;
+
+                let mut proxies = Vec::with_capacity(object_paths.len());
+                for object_path in object_paths {
+                    let proxy = #proxy_build?;
+                    proxies.push(proxy);
+                }
+
+                Ok(proxies)
+            }
+        } else {
+            quote! {
+                let object_path: #zbus::zvariant::OwnedObjectPath = #method_call;
+                #proxy_build
+            }
+        };
         Ok(quote! {
             #(#other_attrs)*
             pub #usage #signature {
-                let object_path: #zbus::zvariant::OwnedObjectPath =
-                    self.0.call(
-                        #dbus_member_name,
-                        &#zbus::zvariant::DynamicTuple((#(#args,)*)),
-                    )
-                    #wait?;
-                #proxy_path::builder(&self.0.connection())
-                    .path(object_path)?
-                    .build()
-                    #wait
+                #body
             }
         })
     } else {
@@ -726,6 +755,8 @@ fn gen_proxy_property(
             }
         });
 
+        let proxy_vec = method_attrs.object_vec;
+
         // This should fail to compile only if the return type is wrong,
         // so use that as the span.
         let body_span = if let ReturnType::Type(_, ty) = &signature.output {
@@ -745,17 +776,44 @@ fn gen_proxy_property(
             let proxy_path: Path = parse_str(&proxy_path_str).unwrap();
             let method_name = Ident::new(rust_method_name, m.sig.ident.span());
             let inputs = &signature.inputs;
-            let custom_sig = quote! {
-                fn #method_name(#inputs) -> #zbus::Result<#proxy_path<'p>>
+            let custom_sig = if proxy_vec {
+                quote! {
+                    fn #method_name(#inputs) -> #zbus::Result<Vec<#proxy_path<'p>>>
+                }
+            } else {
+                quote! {
+                    fn #method_name(#inputs) -> #zbus::Result<#proxy_path<'p>>
+                }
             };
-            let body = quote_spanned! {body_span =>
-                let object_path: #zbus::zvariant::OwnedObjectPath =
-                    self.0.get_property(#property_name)#wait?;
+            let property_get = quote! {
+                self.0.get_property(#property_name)#wait?
+            };
+            let proxy_build = quote! {
                 #proxy_path::builder(&self.0.connection())
                     .destination(self.0.destination().to_owned())?
                     .path(object_path)?
                     .build()
                     #wait
+            };
+            let body = if proxy_vec {
+                quote_spanned! {body_span =>
+                    let object_paths: Vec<#zbus::zvariant::OwnedObjectPath> =
+                        #property_get;
+
+                    let mut proxies = Vec::with_capacity(object_paths.len());
+                    for object_path in object_paths {
+                        let proxy = #proxy_build?;
+                        proxies.push(proxy);
+                    }
+
+                    Ok(proxies)
+                }
+            } else {
+                quote_spanned! {body_span =>
+                    let object_path: #zbus::zvariant::OwnedObjectPath =
+                        #property_get;
+                    #proxy_build
+                }
             };
             (body, Some(custom_sig))
         } else {

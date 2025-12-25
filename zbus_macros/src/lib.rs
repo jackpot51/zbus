@@ -99,6 +99,10 @@ mod utils;
 /// * `blocking_object` - if the assumptions made by `object` attribute about naming of the blocking
 ///   proxy type, don't fit your bill, you can use this to specify its exact name.
 ///
+/// * `object_vec` - this method returns a list of [`ObjectPath`]s (DBus signature `ao`) that should
+///   be converted to the proxy object type named by `object`, `async_object` and `blocking_object`
+///   attributes, and returned as a `Vec<_>`.
+///
 ///   NB: Any doc comments provided shall be appended to the ones added by the macro.
 ///
 /// # Signals

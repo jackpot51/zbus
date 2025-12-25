@@ -430,3 +430,63 @@ mod signal_from_message {
             .expect_err("Message does not have correct data");
     }
 }
+
+#[test]
+fn test_proxy_object_list() {
+    #[derive(Clone)]
+    struct ObjectList {
+        paths: [zbus::zvariant::ObjectPath<'static>; 2],
+    }
+
+    #[zbus_macros::interface(
+        name = "org.freedesktop.zbus_macros.ObjectList",
+        proxy(default_service = "org.freedesktop.zbus_macros")
+    )]
+    impl ObjectList {
+        #[zbus(proxy(object = "ObjectList", object_vec))]
+        async fn get_test_objects(&self) -> Vec<zbus::zvariant::ObjectPath<'static>> {
+            self.paths.to_vec()
+        }
+
+        #[zbus(property, proxy(object = "ObjectList", object_vec))]
+        fn objects(&self) -> Vec<zbus::zvariant::ObjectPath<'static>> {
+            self.paths.to_vec()
+        }
+    }
+
+    static OBJECT_LIST: ObjectList = ObjectList {
+        paths: [
+            zbus::zvariant::ObjectPath::from_static_str_unchecked(
+                "/org/freedesktop/zbus_macros/object_list/0",
+            ),
+            zbus::zvariant::ObjectPath::from_static_str_unchecked(
+                "/org/freedesktop/zbus_macros/object_list/1",
+            ),
+        ],
+    };
+
+    fn check_return(list: Vec<ObjectListProxyBlocking<'_>>) {
+        for (correct, returned) in OBJECT_LIST.paths.iter().zip(list.into_iter()) {
+            assert!(returned.inner().path() == correct);
+        }
+    }
+
+    let connection = zbus::blocking::connection::Builder::session()
+        .unwrap()
+        .serve_at(OBJECT_LIST.paths[1].as_ref(), OBJECT_LIST.clone())
+        .unwrap()
+        .build()
+        .unwrap();
+    let destination = connection.unique_name().unwrap().clone();
+
+    let proxy = ObjectListProxyBlocking::builder(&connection)
+        .path(OBJECT_LIST.paths[1].as_ref())
+        .unwrap()
+        .destination(&destination)
+        .unwrap()
+        .build()
+        .unwrap();
+
+    check_return(proxy.get_test_objects().unwrap());
+    check_return(proxy.objects().unwrap());
+}
