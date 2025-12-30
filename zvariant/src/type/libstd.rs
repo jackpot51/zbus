@@ -1,4 +1,4 @@
-use crate::{Signature, Type, impl_type_with_repr};
+use crate::{Basic, Signature, Type, impl_type_with_repr};
 use std::{
     cell::{Cell, RefCell},
     cmp::Reverse,
@@ -204,7 +204,7 @@ macro_rules! map_impl {
     ($ty:ident < K $(: $kbound1:ident $(+ $kbound2:ident)*)*, V $(, $typaram:ident : $bound:ident)* >) => {
         impl<K, V $(, $typaram)*> Type for $ty<K, V $(, $typaram)*>
         where
-            K: Type $(+ $kbound1 $(+ $kbound2)*)*,
+            K: Basic $(+ $kbound1 $(+ $kbound2)*)*,
             V: Type,
             $($typaram: $bound,)*
         {
