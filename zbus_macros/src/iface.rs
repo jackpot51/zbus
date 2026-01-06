@@ -58,6 +58,7 @@ def_attrs! {
                 object str,
                 async_object str,
                 blocking_object str,
+                object_vec none,
                 no_reply none,
                 no_autostart none,
                 allow_interactive_auth none
@@ -1555,6 +1556,9 @@ impl Proxy {
             }
             if let Some(blocking_object) = attrs.blocking_object {
                 proxy_method_attrs.extend(quote! { blocking_object = #blocking_object, });
+            }
+            if attrs.object_vec {
+                proxy_method_attrs.extend(quote! { object_vec, });
             }
             if attrs.no_reply {
                 proxy_method_attrs.extend(quote! { no_reply, });
