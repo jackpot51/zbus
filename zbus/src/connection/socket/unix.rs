@@ -325,7 +325,12 @@ fn fd_sendmsg(fd: BorrowedFd<'_>, buffer: &[u8], fds: &[BorrowedFd<'_>]) -> io::
         ));
     }
 
-    let sent = sendmsg(fd, &iov, &mut ancillary, SendFlags::empty())?;
+    #[cfg(not(target_os = "macos"))]
+    let flags = SendFlags::NOSIGNAL;
+    #[cfg(target_os = "macos")]
+    let flags = SendFlags::empty();
+
+    let sent = sendmsg(fd, &iov, &mut ancillary, flags)?;
     if sent == 0 {
         // can it really happen?
         return Err(io::Error::new(
