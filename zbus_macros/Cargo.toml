@@ -19,7 +19,7 @@ readme = "README.md"
 [features]
 default = []
 # Enable blocking API.
-blocking-api = ["zbus/blocking-api"]
+blocking-api = []
 gvariant = ["zvariant/gvariant", "zvariant_utils/gvariant"]
 
 [lib]
