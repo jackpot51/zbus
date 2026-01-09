@@ -1,0 +1,28 @@
+# zbus_xmlgen Changelog
+
+## 5.2.0 - 2026-01-09
+
+### Changed
+- 🔧 use edition from workspace.
+- 🎨 Format all files (rust 1.85).
+- 🚚 Update name of Github space from dbus2 to z-galaxy.
+- 🎨 Satisfy latest clippy.
+
+
+### Fixed
+- 🩹 Don't use workspace for local deps.
+
+
+### Other
+- 🧑‍💻 Bump rust version to 1.85.
+- 🚨 Fix against latest clippy.
+- 🧑‍💻 Use workspace dependencies.
+
+
+### Performance
+- ⚡️ Remove a needless iteration.
+
+
+### Removed
+- ➖ Allow the library part not depend on clap.
+
