@@ -263,6 +263,11 @@ macro_rules! define_name_type_impls {
             pub fn inner(&self) -> &$name<'static> {
                 &self.0
             }
+
+            /// This is faster than `Clone::clone` when `self` contains owned data.
+            pub fn as_ref(&self) -> $name<'_> {
+                self.0.as_ref()
+            }
         }
 
         impl std::ops::Deref for $owned_name {
