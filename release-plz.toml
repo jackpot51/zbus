@@ -18,7 +18,7 @@ pr_name = "chore: release"
 # Changelog configuration for gimoji-based commits.
 # See: https://zeenix.github.io/gimoji/
 [changelog]
-header = "# Changelog\n\n"
+header = "# {{ package }} Changelog\n\n"
 
 # Changelog body template.
 # Issue refs are separated by "||" delimiter so we can insert period before them.

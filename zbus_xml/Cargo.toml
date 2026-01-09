@@ -1,6 +1,6 @@
 [package]
 name = "zbus_xml"
-version = "5.0.2"
+version = "5.1.0"
 authors = ["Zeeshan Ali Khan <zeeshanak@gnome.org>"]
 edition = { workspace = true }
 rust-version = { workspace = true }
@@ -14,8 +14,8 @@ readme = "README.md"
 
 [dependencies]
 serde.workspace = true
-zvariant = { path = "../zvariant", version = "5.5.0" }
-zbus_names = { path = "../zbus_names", version = "4.2.0" }
+zvariant = { path = "../zvariant", version = "5.9.0" }
+zbus_names = { path = "../zbus_names", version = "4.3.0" }
 quick-xml.workspace = true
 
 [dev-dependencies]
