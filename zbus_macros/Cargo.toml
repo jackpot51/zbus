@@ -32,7 +32,7 @@ quote.workspace = true
 proc-macro-crate.workspace = true
 
 zvariant = { path = "../zvariant", version = "5.9.0" }
-zbus_names = { path = "../zbus_names", version = "4.3.0" }
+zbus_names = { path = "../zbus_names", version = "4.3.1" }
 zvariant_utils = { path = "../zvariant_utils", version = "3.3.0" }
 
 [dev-dependencies]
