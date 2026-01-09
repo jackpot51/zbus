@@ -22,21 +22,18 @@ pr_name = "chore: release"
 # Changelog body template.
 # Issue refs are separated by "||" delimiter so we can insert period before them.
 body = """
-{% if version %}\
-    ## {{ version | trim_start_matches(pat="v") }} - {{ timestamp | date(format="%Y-%m-%d") }}
-{% else %}\
-    ## Unreleased
-{% endif %}\
+
+## {{ version | trim_start_matches(pat="v") }} - {{ timestamp | date(format="%Y-%m-%d") }}
 {% for group, commits in commits | group_by(attribute="group") %}
-    ### {{ group | upper_first }}
-    {% for commit in commits %}\
-        {% set first_line = commit.message | split(pat="\n") | first %}\
-        {% set parts = first_line | split(pat="||") %}\
-        - {{ parts | first | upper_first | trim | trim_end_matches(pat=".") }}\
-            {% if commit.breaking %} (**BREAKING**){% endif %}.\
-            {% if parts | length > 1 %} {{ parts | last }}{% endif %}
-    {% endfor %}
-{% endfor %}
+### {{ group | upper_first }}
+{% for commit in commits %}\
+{% set first_line = commit.message | split(pat="\n") | first %}\
+{% set parts = first_line | split(pat="||") %}\
+- {{ parts | first | upper_first | trim | trim_end_matches(pat=".") }}\
+{% if commit.breaking %} (**BREAKING**){% endif %}.\
+{% if parts | length > 1 %} {{ parts | last }}{% endif %}
+{% endfor %}\
+{% endfor %}\
 """
 
 # Protect breaking change commits from being filtered out.
