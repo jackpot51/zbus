@@ -1307,23 +1307,22 @@ fn introspect_add_output_args(
                 args.extend(introspect_output_arg(&t.elems[i], name, cfg_attrs));
             }
         } else {
-            // Handle single output case - check if out_args was specified
-            let name = match arg_names {
-                Some(names) => match names.len() {
-                    1 => Some(&names[0]),
-                    0 => None,
-                    _ => {
-                        return Err(Error::new_spanned(
-                            ty,
-                            format!(
-                                "out_args specifies {} names but method has a single output",
-                                names.len()
-                            ),
-                        ));
-                    }
-                },
-                None => None,
-            };
+            // Note: The type might still serialize as a DBus struct/tuple if it has a custom
+            // signature (e.g., `#[zvariant(signature = "(...)")]`), but we can't detect this
+            // from the Rust type structure alone.
+            //
+            // If out_args has exactly one name, apply it to this output.
+            // If out_args has multiple names, the user likely has a type with a tuple signature,
+            // but we can't generate separate <arg> elements for each field since we don't have
+            // access to the individual field types. In this case, we generate a single <arg>
+            // with the type's full signature and no name. The signature will be correct at runtime.
+            let name = arg_names.and_then(|names| {
+                if names.len() == 1 {
+                    Some(&names[0])
+                } else {
+                    None
+                }
+            });
             args.extend(introspect_output_arg(ty, name, cfg_attrs));
         }
     }
