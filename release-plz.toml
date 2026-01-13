@@ -13,7 +13,7 @@ publish = true
 semver_check = true
 
 # PR configuration.
-pr_name = "chore: release"
+pr_name = "🔖 Releases"
 
 # Changelog configuration for gimoji-based commits.
 # See: https://zeenix.github.io/gimoji/
