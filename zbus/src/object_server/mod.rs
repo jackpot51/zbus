@@ -369,8 +369,18 @@ impl ObjectServer {
         // way, the object server can be mutated during that time.
         let (iface, with_spawn) = {
             let root = self.root.read().await;
+
+            // D-Bus spec: org.freedesktop.DBus.Peer interface works on ANY path, even unregistered
+            // ones. See: https://dbus.freedesktop.org/doc/dbus-specification.html#standard-interfaces-peer
+            // Switch the path to "/" for Peer interface calls.
+            let path = if *iface_name == fdo::Peer::name() {
+                ObjectPath::from_static_str_unchecked("/")
+            } else {
+                path.clone()
+            };
+
             let node = root
-                .get_child(path)
+                .get_child(&path)
                 .ok_or_else(|| fdo::Error::UnknownObject(format!("Unknown object '{path}'")))?;
 
             let iface = node.interface_lock(iface_name.as_ref()).ok_or_else(|| {
