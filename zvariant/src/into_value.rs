@@ -2,7 +2,7 @@ use std::{borrow::Cow, collections::HashMap, hash::BuildHasher, sync::Arc};
 
 #[cfg(feature = "gvariant")]
 use crate::Maybe;
-use crate::{Array, Basic, Dict, NoneValue, ObjectPath, Optional, Str, Structure, Type, Value};
+use crate::{Array, Dict, NoneValue, ObjectPath, Optional, Str, Structure, Type, Value};
 
 #[cfg(unix)]
 use crate::Fd;
@@ -122,7 +122,7 @@ impl<'a, 'k, 'v, K, V, H> From<HashMap<K, V, H>> for Value<'a>
 where
     'k: 'a,
     'v: 'a,
-    K: Basic + Into<Value<'k>> + std::hash::Hash + std::cmp::Eq,
+    K: Type + Into<Value<'k>> + std::hash::Hash + std::cmp::Eq,
     V: Type + Into<Value<'v>>,
     H: BuildHasher + Default,
 {
