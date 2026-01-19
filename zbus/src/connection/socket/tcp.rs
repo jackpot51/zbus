@@ -121,7 +121,7 @@ impl ReadHalf for tokio::net::tcp::OwnedReadHalf {
             move || win32_credentials_from_addr(&peer_addr),
             "peer credentials",
         )
-        .await
+        .await?
     }
 
     #[cfg(not(windows))]
@@ -162,7 +162,7 @@ impl WriteHalf for tokio::net::tcp::OwnedWriteHalf {
             move || win32_credentials_from_addr(&peer_addr),
             "peer credentials",
         )
-        .await
+        .await?
     }
 }
 
