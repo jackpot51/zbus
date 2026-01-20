@@ -157,6 +157,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Test
         run: |
+          $PSNativeCommandUseErrorActionPreference = $true
           Start-Process C:\vcpkg\installed\x64-windows\tools\dbus\dbus-daemon.exe '--config-file=CI/win32-session.conf --address=autolaunch:'
           cargo --locked test
           # tokio feature
