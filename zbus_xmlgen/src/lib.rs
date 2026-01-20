@@ -259,7 +259,7 @@ fn hide_clippy_type_complexity_lint<W: Write>(
 
 fn inputs_output_from_args(args: &[Arg]) -> (String, String) {
     let mut inputs = vec!["&self".to_string()];
-    let mut output = vec![];
+    let mut output: Vec<OutputArg> = vec![];
     let mut n = 0;
     let mut gen_name = || {
         n += 1;
@@ -279,18 +279,46 @@ fn inputs_output_from_args(args: &[Arg]) -> (String, String) {
             }
             Some(ArgDirection::Out) => {
                 let ty = to_rust_type(a.ty(), false, false);
-                output.push(ty);
+                let is_struct = matches!(a.ty().inner(), Signature::Structure(_));
+                output.push(OutputArg { ty, is_struct });
             }
         }
     }
 
-    let output = match output.len() {
-        0 => "()".to_string(),
-        1 => output[0].to_string(),
-        _ => format!("({})", output.join(", ")),
+    let output_str = match &output[..] {
+        [] => "()".to_string(),
+        [
+            OutputArg {
+                ty,
+                is_struct: true,
+            },
+        ] => {
+            // If there's a single output argument and it is a struct type, we need to wrap it
+            // in a tuple to distinguish it from multiple return values
+            format!("({ty},)")
+        }
+        [
+            OutputArg {
+                ty,
+                is_struct: false,
+            },
+        ] => ty.clone(),
+        multiple => {
+            let types = multiple
+                .iter()
+                .map(|arg| arg.ty.as_str())
+                .collect::<Vec<_>>();
+            format!("({})", types.join(", "))
+        }
     };
 
-    (inputs.join(", "), format!(" -> zbus::Result<{output}>"))
+    (inputs.join(", "), format!(" -> zbus::Result<{output_str}>"))
+}
+
+#[derive(Debug)]
+struct OutputArg {
+    ty: String,
+    is_struct: bool,
 }
 
 fn parse_signal_args(args: &[Arg]) -> String {
