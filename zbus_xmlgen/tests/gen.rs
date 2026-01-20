@@ -42,3 +42,8 @@ macro_rules! gen_diff {
 fn sample_object0() -> Result<(), Box<dyn Error>> {
     gen_diff!("sample_object0.xml", "sample_object0.rs")
 }
+
+#[test]
+fn struct_return() -> Result<(), Box<dyn Error>> {
+    gen_diff!("struct_return.xml", "struct_return.rs")
+}
