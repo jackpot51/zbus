@@ -1,4 +1,4 @@
-use crate::{Signature, Type, serialized::Format};
+use crate::{Signature, Type, impl_type_with_repr, serialized::Format};
 
 /// Trait for basic types.
 ///
@@ -19,14 +19,6 @@ pub trait Basic: Type {
     fn alignment(format: Format) -> usize {
         Self::SIGNATURE.alignment(format)
     }
-}
-
-impl<B: ?Sized> Basic for &B
-where
-    B: Basic,
-{
-    const SIGNATURE_CHAR: char = B::SIGNATURE_CHAR;
-    const SIGNATURE_STR: &'static str = B::SIGNATURE_STR;
 }
 
 macro_rules! impl_type {
@@ -189,3 +181,132 @@ impl Basic for char {
     const SIGNATURE_STR: &'static str = <&str>::SIGNATURE_STR;
 }
 impl_type!(char);
+
+////////////////////////////////////////////////////////////////////////////////
+
+impl Basic for usize {
+    const SIGNATURE_CHAR: char = <u64 as Basic>::SIGNATURE_CHAR;
+    const SIGNATURE_STR: &'static str = <u64 as Basic>::SIGNATURE_STR;
+}
+
+impl_type_with_repr! {
+    // usize is serialized as u64:
+    // https://github.com/serde-rs/serde/blob/9b868ef831c95f50dd4bde51a7eb52e3b9ee265a/serde/src/ser/impls.rs#L28
+    usize => u64 {
+        usize {
+            samples = [usize::MAX, usize::MIN],
+            repr(n) = n as u64,
+        }
+    }
+}
+
+impl_type_with_repr! {
+    // isize is serialized as i64:
+    // https://github.com/serde-rs/serde/blob/9b868ef831c95f50dd4bde51a7eb52e3b9ee265a/serde/src/ser/impls.rs#L22
+    isize => i64 {
+        isize {
+            samples = [isize::MAX, isize::MIN],
+            repr(n) = n as i64,
+        }
+    }
+}
+
+impl Basic for isize {
+    const SIGNATURE_CHAR: char = <i64 as Basic>::SIGNATURE_CHAR;
+    const SIGNATURE_STR: &'static str = <i64 as Basic>::SIGNATURE_STR;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+macro_rules! impl_basic_for_deref {
+    (
+        $type:ty,
+        <$($desc:tt)+
+    ) => {
+        impl <$($desc)+ {
+            const SIGNATURE_CHAR: char = <$type>::SIGNATURE_CHAR;
+            const SIGNATURE_STR: &'static str = <$type>::SIGNATURE_STR;
+        }
+    };
+}
+
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for &T);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for &mut T);
+impl_basic_for_deref!(T, <T: ?Sized + Basic + ToOwned> Basic for std::borrow::Cow<'_,T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::sync::Arc<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::sync::Weak<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::sync::Mutex<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::sync::RwLock<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::boxed::Box<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::rc::Rc<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::rc::Weak<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::cell::Cell<T>);
+impl_basic_for_deref!(T, <T: ?Sized + Basic> Basic for std::cell::RefCell<T>);
+
+////////////////////////////////////////////////////////////////////////////////
+
+use std::{
+    cmp::Reverse,
+    num::{Saturating, Wrapping},
+};
+
+macro_rules! impl_basic_for_wrapper {
+    ($($wrapper:ident<$T:ident>),+) => {
+        $(
+            impl<$T: Basic> Basic for $wrapper<$T> {
+                const SIGNATURE_CHAR: char = <$T>::SIGNATURE_CHAR;
+                const SIGNATURE_STR: &'static str = <$T>::SIGNATURE_STR;
+            }
+        )+
+    };
+}
+
+impl_basic_for_wrapper!(Wrapping<T>, Saturating<T>, Reverse<T>);
+
+////////////////////////////////////////////////////////////////////////////////
+
+macro_rules! atomic_impl {
+    ($($ty:ident $size:expr => $primitive:ident)*) => {
+        $(
+            #[cfg(target_has_atomic = $size)]
+            impl Basic for $ty {
+                const SIGNATURE_CHAR: char = <$primitive as Basic>::SIGNATURE_CHAR;
+                const SIGNATURE_STR: &'static str = <$primitive as Basic>::SIGNATURE_STR;
+            }
+            impl_type!($ty);
+        )*
+    }
+}
+
+use std::sync::atomic::{
+    AtomicBool, AtomicI8, AtomicI16, AtomicI32, AtomicIsize, AtomicU8, AtomicU16, AtomicU32,
+    AtomicUsize,
+};
+#[cfg(target_has_atomic = "64")]
+use std::sync::atomic::{AtomicI64, AtomicU64};
+
+atomic_impl! {
+    AtomicBool "8" => bool
+    AtomicI8 "8" => i8
+    AtomicI16 "16" => i16
+    AtomicI32 "32" => i32
+    AtomicIsize "ptr" => isize
+    AtomicU8 "8" => u8
+    AtomicU16 "16" => u16
+    AtomicU32 "32" => u32
+    AtomicUsize "ptr" => usize
+}
+
+#[cfg(target_has_atomic = "64")]
+atomic_impl! {
+    AtomicI64 "64" => i64
+    AtomicU64 "64" => u64
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+#[cfg(feature = "heapless")]
+impl<const CAP: usize> Basic for heapless::String<CAP> {
+    const SIGNATURE_CHAR: char = <&str as Basic>::SIGNATURE_CHAR;
+    const SIGNATURE_STR: &'static str = <&str as Basic>::SIGNATURE_STR;
+}
