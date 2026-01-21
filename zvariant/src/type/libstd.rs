@@ -6,18 +6,9 @@ use std::{
     num::{Saturating, Wrapping},
     ops::{Range, RangeFrom, RangeInclusive, RangeTo},
     rc::{Rc, Weak as RcWeak},
-    sync::{
-        Arc, Mutex, RwLock, Weak as ArcWeak,
-        atomic::{
-            AtomicBool, AtomicI8, AtomicI16, AtomicI32, AtomicIsize, AtomicU8, AtomicU16,
-            AtomicU32, AtomicUsize,
-        },
-    },
+    sync::{Arc, Mutex, RwLock, Weak as ArcWeak},
     time::Duration,
 };
-
-#[cfg(target_has_atomic = "64")]
-use std::sync::atomic::{AtomicI64, AtomicU64};
 
 impl<T> Type for PhantomData<T>
 where
@@ -95,7 +86,7 @@ impl Type for () {
     const SIGNATURE: &'static Signature = &Signature::Unit;
 }
 
-macro_rules! deref_impl {
+macro_rules! impl_type_for_deref {
     (
         $type:ty,
         <$($desc:tt)+
@@ -106,18 +97,18 @@ macro_rules! deref_impl {
     };
 }
 
-deref_impl!(T, <T: ?Sized + Type> Type for &T);
-deref_impl!(T, <T: ?Sized + Type> Type for &mut T);
-deref_impl!(T, <T: ?Sized + Type + ToOwned> Type for Cow<'_, T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Arc<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for ArcWeak<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Mutex<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for RwLock<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Box<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Rc<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for RcWeak<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Cell<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for RefCell<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for &T);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for &mut T);
+impl_type_for_deref!(T, <T: ?Sized + Type + ToOwned> Type for Cow<'_, T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Arc<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for ArcWeak<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Mutex<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for RwLock<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Box<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Rc<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for RcWeak<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Cell<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for RefCell<T>);
 
 #[cfg(all(feature = "gvariant", not(feature = "option-as-array")))]
 impl<T> Type for Option<T>
@@ -220,30 +211,6 @@ map_impl!(HashMap<K: Eq + Hash, V, H: BuildHasher>);
 ////////////////////////////////////////////////////////////////////////////////
 
 impl_type_with_repr! {
-    // usize is serialized as u64:
-    // https://github.com/serde-rs/serde/blob/9b868ef831c95f50dd4bde51a7eb52e3b9ee265a/serde/src/ser/impls.rs#L28
-    usize => u64 {
-        usize {
-            samples = [usize::MAX, usize::MIN],
-            repr(n) = n as u64,
-        }
-    }
-}
-
-impl_type_with_repr! {
-    // isize is serialized as i64:
-    // https://github.com/serde-rs/serde/blob/9b868ef831c95f50dd4bde51a7eb52e3b9ee265a/serde/src/ser/impls.rs#L22
-    isize => i64 {
-        isize {
-            samples = [isize::MAX, isize::MIN],
-            repr(n) = n as i64,
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-impl_type_with_repr! {
     Duration => (u64, u32) {
         duration {
             samples = [Duration::ZERO, Duration::MAX],
@@ -265,37 +232,6 @@ macro_rules! impl_type_for_wrapper {
 }
 
 impl_type_for_wrapper!(Wrapping<T>, Saturating<T>, Reverse<T>);
-
-////////////////////////////////////////////////////////////////////////////////
-
-macro_rules! atomic_impl {
-    ($($ty:ident $size:expr => $primitive:ident)*) => {
-        $(
-            #[cfg(target_has_atomic = $size)]
-            impl Type for $ty {
-                const SIGNATURE: &'static Signature = <$primitive as Type>::SIGNATURE;
-            }
-        )*
-    }
-}
-
-atomic_impl! {
-    AtomicBool "8" => bool
-    AtomicI8 "8" => i8
-    AtomicI16 "16" => i16
-    AtomicI32 "32" => i32
-    AtomicIsize "ptr" => isize
-    AtomicU8 "8" => u8
-    AtomicU16 "16" => u16
-    AtomicU32 "32" => u32
-    AtomicUsize "ptr" => usize
-}
-
-#[cfg(target_has_atomic = "64")]
-atomic_impl! {
-    AtomicI64 "64" => i64
-    AtomicU64 "64" => u64
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 
