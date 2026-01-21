@@ -95,7 +95,7 @@ impl Type for () {
     const SIGNATURE: &'static Signature = &Signature::Unit;
 }
 
-macro_rules! deref_impl {
+macro_rules! impl_type_for_deref {
     (
         $type:ty,
         <$($desc:tt)+
@@ -106,18 +106,18 @@ macro_rules! deref_impl {
     };
 }
 
-deref_impl!(T, <T: ?Sized + Type> Type for &T);
-deref_impl!(T, <T: ?Sized + Type> Type for &mut T);
-deref_impl!(T, <T: ?Sized + Type + ToOwned> Type for Cow<'_, T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Arc<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for ArcWeak<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Mutex<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for RwLock<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Box<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Rc<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for RcWeak<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for Cell<T>);
-deref_impl!(T, <T: ?Sized + Type> Type for RefCell<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for &T);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for &mut T);
+impl_type_for_deref!(T, <T: ?Sized + Type + ToOwned> Type for Cow<'_, T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Arc<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for ArcWeak<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Mutex<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for RwLock<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Box<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Rc<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for RcWeak<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for Cell<T>);
+impl_type_for_deref!(T, <T: ?Sized + Type> Type for RefCell<T>);
 
 #[cfg(all(feature = "gvariant", not(feature = "option-as-array")))]
 impl<T> Type for Option<T>
