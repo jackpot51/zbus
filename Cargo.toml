@@ -9,7 +9,7 @@ members = [
     "zbus_xml",
     "zbus_xmlgen",
 ]
-resolver = "2"
+resolver = "3"
 
 [workspace.lints.rust]
 # This optional cfg flag is used by tokio code to set task name
@@ -17,7 +17,7 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(tokio_unstable)'] }
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.87"
 license = "MIT"
 repository = "https://github.com/z-galaxy/zbus/"
 
