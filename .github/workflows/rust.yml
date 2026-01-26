@@ -92,7 +92,8 @@ jobs:
           sudo mkdir -p /run/user/$UID |
           sed -e s/UID/$UID/ -e s/PATH/path/ CI/dbus-session.conf > /tmp/dbus-session.conf
           sed -e s/UID/$UID/ -e s/PATH/abstract/ CI/dbus-session.conf > /tmp/dbus-session-abstract.conf
-          sudo apt-get install -y dbus
+          sudo apt-get update
+          sudo apt-get install -y dbus ibus
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
@@ -101,6 +102,9 @@ jobs:
       - name: Build and Test
         run: |
           dbus-run-session --config-file /tmp/dbus-session-abstract.conf -- cargo --locked test --release --verbose -- basic_connection
+          # Start IBus daemon for IBus test.
+          ibus-daemon -d --xim
+          sleep 2
           # All features except tokio.
           dbus-run-session --config-file /tmp/dbus-session.conf -- \
             cargo --locked test --release --verbose --features uuid,url,time,chrono,option-as-array,vsock,bus-impl \
