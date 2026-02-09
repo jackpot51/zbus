@@ -127,7 +127,6 @@ where
     type SerializeStruct = StructSeqSerializer<'ser, 'b, W>;
     type SerializeStructVariant = StructSeqSerializer<'ser, 'b, W>;
 
-    serialize_basic!(serialize_bool, bool);
     serialize_basic!(serialize_i16, i16);
     serialize_basic!(serialize_i32, i32);
     serialize_basic!(serialize_i64, i64);
@@ -138,6 +137,13 @@ where
     serialize_basic!(serialize_u64, u64);
 
     serialize_basic!(serialize_f64, f64);
+
+    fn serialize_bool(self, v: bool) -> Result<()> {
+        // bool is encoded as a single byte in GVariant
+        self.0
+            .write_all(&[v as u8])
+            .map_err(|e| Error::InputOutput(e.into()))
+    }
 
     fn serialize_i8(self, v: i8) -> Result<()> {
         // No i8 type in GVariant, let's pretend it's i16
