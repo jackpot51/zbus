@@ -98,7 +98,6 @@ impl<'de, 'd, 'sig, 'f, #[cfg(unix)] F: AsFd, #[cfg(not(unix))] F> de::Deseriali
         crate::de::deserialize_any::<Self, V>(self, self.0.signature, visitor)
     }
 
-    deserialize_basic!(deserialize_bool);
     deserialize_basic!(deserialize_i8);
     deserialize_basic!(deserialize_i16);
     deserialize_basic!(deserialize_i32);
@@ -109,6 +108,16 @@ impl<'de, 'd, 'sig, 'f, #[cfg(unix)] F: AsFd, #[cfg(not(unix))] F> de::Deseriali
     deserialize_basic!(deserialize_u64);
     deserialize_basic!(deserialize_f32);
     deserialize_basic!(deserialize_f64);
+
+    fn deserialize_bool<V>(self, visitor: V) -> Result<V::Value>
+    where
+        V: Visitor<'de>,
+    {
+        // bool is encoded as a single byte in GVariant
+        let value = *subslice(self.0.bytes, self.0.pos)? != 0;
+        self.0.pos += 1;
+        visitor.visit_bool(value)
+    }
 
     fn deserialize_byte_buf<V>(self, visitor: V) -> Result<V::Value>
     where
