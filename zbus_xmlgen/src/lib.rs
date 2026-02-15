@@ -19,7 +19,7 @@ pub fn write_interfaces(
     input_src: &str,
     cargo_bin_name: &str,
     cargo_bin_version: &str,
-) -> Result<String, Box<dyn Error>> {
+) -> Result<String, Box<dyn Error + 'static>> {
     let mut unformatted = String::new();
 
     write_doc_header(
